@@ -74,8 +74,8 @@ set smartcase                   " ... but not when search pattern contains upper
 " ale
 let g:ruby_indent_assignment_style = 'variable'
 let g:ruby_indent_hanging_elements = 0
-let g:ale_linters = {'ruby': ['standardrb']}
-let g:ale_fixers = {'ruby': ['standardrb']}
+let g:ale_linters = {'ruby': ['rubocop']}
+let g:ale_fixers = {'ruby': ['rubocop']}
 let g:ale_virtualtext_cursor = 'disabled'
 highlight clear ALEWarning
 highlight clear ALEError
