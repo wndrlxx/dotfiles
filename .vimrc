@@ -107,7 +107,7 @@ let g:lightline#ale#indicator_infos = "\uf129"
 let g:lightline#ale#indicator_warnings = "\uf071"
 let g:lightline#ale#indicator_errors = "\uf05e"
 let g:lightline#ale#indicator_ok = "\uf00c"
-nnoremap <leader>x :ALEFix<CR><CR>
+nnoremap <C-X> :ALEFix<CR>
 
 " NERDTree
 let mapleader=";"
