@@ -144,6 +144,8 @@ nmap <silent> <leader>T :TestFile<CR>
 nmap <silent> <leader>a :TestSuite<CR>
 nmap <silent> <leader>l :TestLast<CR>
 nmap <silent> <leader>g :TestVisit<CR>
+let test#ruby#bundle_exec = 0
+let test#strategy = "vimterminal"
 
 " vim-reek
 nmap <leader>e :RunReek<CR>
