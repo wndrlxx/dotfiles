@@ -160,3 +160,7 @@ inoremap <expr> <cr>    pumvisible() ? asyncomplete#close_popup() : "\<cr>"
 " buffer
 nnoremap <leader>j :bp<CR>
 nnoremap <leader>k :bn<CR>
+
+" save & exit
+nmap <leader>w :w<CR>
+nmap <leader>q :q<CR>
