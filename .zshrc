@@ -1,4 +1,4 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
@@ -14,7 +14,7 @@ jdk() {
  }
 
 if type rg &> /dev/null; then
-  export FZF_DEFAULT_COMMAND='rg --files'
+  export FZF_DEFAULT_COMMAND='rg --hidden --no-ignore -l ""'
   export FZF_DEFAULT_OPTS='-m --height 60% --border'
 fi
 
@@ -40,7 +40,7 @@ COMPLETION_WAITING_DOTS="true"
 # much, much faster.
 # DISABLE_UNTRACKED_FILES_DIRTY="true"
 
-plugins=(git macos)
+plugins=(git macos web-search)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -87,3 +87,20 @@ export PATH="/usr/local/sbin:$PATH"
 eval $(/opt/homebrew/bin/brew shellenv)
 eval "$(pyenv init -)"
 eval "$(rbenv init - zsh)"
+
+# My custom aliases
+alias seeing_is_believing="andyw8_seeing_is_believing"
+alias be="bundle exec"
+alias br="bin/rails"
+alias lg="lazygit"
+alias e="exit"
+alias viv="vi ~/.vimrc"
+alias viz="vi ~/.zshrc"
+
+# pnpm
+export PNPM_HOME="/Users/alm2/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
