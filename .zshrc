@@ -1,4 +1,3 @@
-
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
@@ -15,7 +14,11 @@ jdk() {
 
 if type rg &> /dev/null; then
   export FZF_DEFAULT_COMMAND='rg --hidden --no-ignore -l ""'
-  export FZF_DEFAULT_OPTS='-m --height 60% --border'
+  export FZF_DEFAULT_OPTS=" \
+    --height 70% --border
+    --color=bg+:#414559,bg:#303446,spinner:#f2d5cf,hl:#e78284 \
+    --color=fg:#c6d0f5,header:#e78284,info:#ca9ee6,pointer:#f2d5cf \
+    --color=marker:#f2d5cf,fg+:#c6d0f5,prompt:#ca9ee6,hl+:#e78284"
 fi
 
 # Path to your oh-my-zsh installation.
@@ -45,7 +48,7 @@ plugins=(git macos web-search)
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
-export BAT_THEME="TwoDark"
+export BAT_THEME="Catppuccin-frappe"
 export TERM=xterm-256color
 
 # You may need to manually set your language environment
