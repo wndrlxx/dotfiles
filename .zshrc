@@ -13,7 +13,7 @@ jdk() {
  }
 
 if type rg &> /dev/null; then
-  export FZF_DEFAULT_COMMAND='rg --hidden --no-ignore -l ""'
+  export FZF_DEFAULT_COMMAND='rg --hidden -g "!tmp/" -g "!.git/" -g "!node_modules" -l ""'
   export FZF_DEFAULT_OPTS=" \
     --height 70% --border
     --color=bg+:#414559,bg:#303446,spinner:#f2d5cf,hl:#e78284 \
