@@ -18,6 +18,7 @@ Plug 'vim-test/vim-test'
 Plug 'tpope/vim-dispatch'
 Plug 'mattn/vim-lsp-settings'
 Plug 'prabirshrestha/vim-lsp'
+Plug 'voldikss/vim-floaterm'
 "Plug 'prabirshrestha/asyncomplete.vim'
 "Plug 'prabirshrestha/asyncomplete-lsp.vim'
 Plug 'dense-analysis/ale'
@@ -113,6 +114,11 @@ nnoremap <C-X> :ALEFix<CR>
 let mapleader=";"
 map <Leader>n :NERDTreeToggle<CR>
 map <Tab>   <C-W>w
+
+" vim-floatern
+noremap  <leader>lg :FloatermNew lazygit<CR>
+let g:floaterm_width = 1.0
+let g:floaterm_height = 1.0
 
 " fzf search
 nnoremap <leader>f :<C-u>FZF<CR>
