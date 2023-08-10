@@ -115,6 +115,8 @@ let g:lightline#ale#indicator_infos = "\uf129"
 let g:lightline#ale#indicator_warnings = "\uf071"
 let g:lightline#ale#indicator_errors = "\uf05e"
 let g:lightline#ale#indicator_ok = "\uf00c"
+map <silent> <C-k> <Plug>(ale_previous_wrap)
+map <silent> <C-j> <Plug>(ale_next_wrap)
 nnoremap <C-X> :ALEFix<CR>
 
 " NERDTree
@@ -132,8 +134,10 @@ nnoremap <leader>f :<C-u>FZF<CR>
 nnoremap <leader>r :Rg<CR>
 
 " Splits remap
-nnoremap <C-J> <C-W><C-J>
-nnoremap <C-K> <C-W><C-K>
+" conflicts with <Plug>(ale_next_wrap)
+" nnoremap <C-J> <C-W><C-J>
+" conflicts with <Plug>(ale_previous_wrap)
+" nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 set splitbelow
