@@ -25,9 +25,11 @@ Bundler/DuplicatedGem:
 RSpec/ExampleLength:
   Exclude:
     - spec/features/*
+    - spec/requests/*
     - spec/system/*
 
 RSpec/MultipleExpectations:
   Exclude:
     - spec/features/*
+    - spec/requests/*
     - spec/system/*
