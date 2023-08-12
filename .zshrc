@@ -97,8 +97,9 @@ alias be="bundle exec"
 alias br="bin/rails"
 alias lg="lazygit"
 alias e="exit"
-alias viv="vi ~/.vimrc"
-alias viz="vi ~/.zshrc"
+alias viv="vim ~/.vimrc"
+alias viz="vim ~/.zshrc"
+alias vit="vim ~/.tmux.conf"
 
 # pnpm
 export PNPM_HOME="/Users/alm2/Library/pnpm"
