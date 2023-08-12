@@ -7,6 +7,7 @@ Plug 'preservim/nerdtree'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-endwise'
+Plug 'tpope/vim-obsession'
 Plug 'airblade/vim-gitgutter'
 Plug 'scrooloose/nerdcommenter'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
@@ -36,7 +37,6 @@ call plug#end()
 " Put these in an autocmd group, so that we can delete them easily.
 augroup vimrcEx
   au!
-  " For all text files set 'textwidth' to 78 characters.
   autocmd FileType text setlocal textwidth=80
 augroup END
 
@@ -124,7 +124,7 @@ let mapleader=";"
 map <Leader>n :NERDTreeToggle<CR>
 map <Tab>   <C-W>w
 
-" vim-floatern
+" vim-floaterm
 noremap  <leader>lg :FloatermNew lazygit<CR>
 let g:floaterm_width = 1.0
 let g:floaterm_height = 1.0
