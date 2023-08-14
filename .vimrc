@@ -164,6 +164,7 @@ nmap <silent> <leader>l :TestLast<CR>
 nmap <silent> <leader>g :TestVisit<CR>
 let test#ruby#bundle_exec = 0
 let test#strategy = "vimterminal"
+let test#ruby#rspec#options = '--format documentation --order random'
 
 " vim-reek
 nmap <leader>e :RunReek<CR>
