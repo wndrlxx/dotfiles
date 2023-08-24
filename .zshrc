@@ -97,7 +97,7 @@ alias be="bundle exec"
 alias br="bin/rails"
 alias lg="lazygit"
 alias e="exit"
-alias viv="vim ~/.vimrc"
+alias viv="vim ~/.config/nvim/init.vim"
 alias viz="vim ~/.zshrc"
 alias vit="vim ~/.tmux.conf"
 
