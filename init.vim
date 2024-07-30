@@ -16,8 +16,16 @@ Plug 'prettier/vim-prettier'
 Plug 'chrisbra/Colorizer'
 Plug 'vim-test/vim-test'
 Plug 'tpope/vim-dispatch'
-Plug 'mattn/vim-lsp-settings'
-Plug 'prabirshrestha/vim-lsp'
+Plug 'neovim/nvim-lspconfig'
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/cmp-path'
+Plug 'hrsh7th/cmp-cmdline'
+Plug 'hrsh7th/nvim-cmp'
+Plug 'L3MON4D3/LuaSnip'
+Plug 'saadparwaiz1/cmp_luasnip'
+"Plug 'mattn/vim-lsp-settings'
+"Plug 'prabirshrestha/vim-lsp'
 Plug 'voldikss/vim-floaterm'
 "Plug 'prabirshrestha/asyncomplete.vim'
 "Plug 'prabirshrestha/asyncomplete-lsp.vim'
@@ -25,6 +33,7 @@ Plug 'dense-analysis/ale'
 Plug 'maximbaz/lightline-ale'
 Plug 'rainerborene/vim-reek'
 Plug 'vim-ruby/vim-ruby'
+Plug 'codota/tabnine-nvim', { 'do': './dl_binaries.sh' }
 Plug 'catppuccin/vim', { 'as': 'catppuccin' }
 call plug#end()
 
@@ -70,6 +79,7 @@ set incsearch                   " Shows the match while typing
 set hlsearch                    " Highlight found searches
 set ignorecase                  " Search case insensitive...
 set smartcase                   " ... but not when search pattern contains upper case characters
+set colorcolumn=80
 
 " ale
 let g:ruby_indent_assignment_style = 'variable'
@@ -77,6 +87,7 @@ let g:ruby_indent_hanging_elements = 0
 let g:ale_linters = {
 \   'ruby': ['rubocop'], 
 \   'javascript': ['eslint'],
+\   'go': ['gopls'],
 \}
 let g:ale_fixers = {
 \   '*': ['remove_trailing_lines', 'trim_whitespace'],
@@ -121,6 +132,7 @@ nnoremap <C-X> :ALEFix<CR>
 " NERDTree
 let mapleader=";"
 map <Leader>n :NERDTreeToggle<CR>
+map <Leader>vn :NERDTreeFind<CR>
 map <Tab>   <C-W>w
 
 " vim-floaterm
@@ -183,3 +195,92 @@ nnoremap <leader>k :bn<CR>
 " save & exit
 nmap <leader>w :w<CR>
 nmap <leader>q :q<CR>
+
+" tabnine
+"lua <<EOF
+  "require('tabnine').setup({
+    "disable_auto_comment=true,
+    "accept_keymap="<Tab>",
+    "dismiss_keymap = "<C-]>",
+    "debounce_ms = 800,
+    "suggestion_color = {gui = "#808080", cterm = 244},
+    "exclude_filetypes = {"TelescopePrompt"},
+    "log_file_path = nil, -- absolute path to Tabnine log file
+  "})
+"EOF
+
+" nvim-cmp
+lua <<EOF
+  -- Set up nvim-cmp.
+  local cmp = require'cmp'
+
+  cmp.setup({
+    snippet = {
+      -- REQUIRED - you must specify a snippet engine
+      expand = function(args)
+        vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
+        -- require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
+        -- require('snippy').expand_snippet(args.body) -- For `snippy` users.
+        -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
+        -- vim.snippet.expand(args.body) -- For native neovim snippets (Neovim v0.10+)
+      end,
+    },
+    window = {
+      -- completion = cmp.config.window.bordered(),
+      -- documentation = cmp.config.window.bordered(),
+    },
+    mapping = cmp.mapping.preset.insert({
+      ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+      ['<C-f>'] = cmp.mapping.scroll_docs(4),
+      ['<C-Space>'] = cmp.mapping.complete(),
+      ['<C-e>'] = cmp.mapping.abort(),
+      ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+    }),
+    sources = cmp.config.sources({
+      { name = 'nvim_lsp' },
+      { name = 'vsnip' }, -- For vsnip users.
+      -- { name = 'luasnip' }, -- For luasnip users.
+      -- { name = 'ultisnips' }, -- For ultisnips users.
+      -- { name = 'snippy' }, -- For snippy users.
+    }, {
+      { name = 'buffer' },
+    })
+  })
+
+  -- To use git you need to install the plugin petertriho/cmp-git and uncomment lines below
+  -- Set configuration for specific filetype.
+  --[[ cmp.setup.filetype('gitcommit', {
+    sources = cmp.config.sources({
+      { name = 'git' },
+    }, {
+      { name = 'buffer' },
+    })
+ })
+ require("cmp_git").setup() ]]-- 
+
+  -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
+  cmp.setup.cmdline({ '/', '?' }, {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = {
+      { name = 'buffer' }
+    }
+  })
+
+  -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
+  cmp.setup.cmdline(':', {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = cmp.config.sources({
+      { name = 'path' }
+    }, {
+      { name = 'cmdline' }
+    }),
+    matching = { disallow_symbol_nonprefix_matching = false }
+  })
+
+  -- Set up lspconfig.
+  local capabilities = require('cmp_nvim_lsp').default_capabilities()
+  -- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
+  require('lspconfig')['ruby_lsp'].setup {
+    capabilities = capabilities
+  }
+EOF
