@@ -1,3 +1,5 @@
+typeset -U PATH path
+
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
@@ -6,11 +8,11 @@ fi
 
 [ -f /opt/homebrew/etc/profile.d/autojump.sh ] && . /opt/homebrew/etc/profile.d/autojump.sh
 
-jdk() {
-        version=$1
-        export JAVA_HOME=$(/usr/libexec/java_home -v"$version");
-        java -version
- }
+#jdk() {
+        #version=$1
+        #export JAVA_HOME=$(/usr/libexec/java_home -v"$version");
+        #java -version
+# }
 
 if type rg &> /dev/null; then
   export FZF_DEFAULT_COMMAND='rg --hidden -g "!tmp/" -g "!.git/" -g "!node_modules" -l ""'
@@ -29,6 +31,9 @@ source /opt/homebrew/share/powerlevel10k/powerlevel10k.zsh-theme
 # Uncomment the following line to change how often to auto-update (in days).
 export UPDATE_ZSH_DAYS=2
 
+# Hide '%' prompt indicator when file doesn't end with newline character.
+PROMPT_EOL_MARK=''
+
 # Uncomment the following line if pasting URLs and other text is messed up.
 # DISABLE_MAGIC_FUNCTIONS=true
 
@@ -43,7 +48,7 @@ COMPLETION_WAITING_DOTS="true"
 # much, much faster.
 # DISABLE_UNTRACKED_FILES_DIRTY="true"
 
-plugins=(git macos web-search)
+plugins=(git macos zsh-autosuggestions)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -82,14 +87,20 @@ load-nvmrc
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
+
 export PATH="$HOME/.rbenv/bin:$PATH"
+export SPARK_HOME=/opt/homebrew/Cellar/apache-spark/3.5.0/libexec
+export PATH="$SPARK_HOME/bin/:$PATH"
+export PYTHONPATH="${SPARK_HOME}/python/:$PYTHONPATH"
+export PYTHONPATH="${SPARK_HOME}/python/lib/py4j-0.10.9.7-src.zip:$PYTHONPATH"
 export PATH="$PATH:$HOME/.local/bin"
-export PATH="/usr/local/opt/sqlite/bin:$PATH"
-export PATH="/usr/local/sbin:$PATH"
+export PATH="/opt/homebrew/opt/sqlite/bin:$PATH"
+export JAVA_HOME="/opt/homebrew/opt/openjdk/"
+export PATH="$JAVA_HOME:$PATH"
 
 eval $(/opt/homebrew/bin/brew shellenv)
-eval "$(pyenv init -)"
 eval "$(rbenv init - zsh)"
+eval "$(pyenv init -)"
 
 # My custom aliases
 alias seeing_is_believing="andyw8_seeing_is_believing"
@@ -97,9 +108,14 @@ alias be="bundle exec"
 alias br="bin/rails"
 alias lg="lazygit"
 alias e="exit"
+alias vi='nvim'
 alias viv="vim ~/.config/nvim/init.vim"
 alias viz="vim ~/.zshrc"
 alias vit="vim ~/.tmux.conf"
+
+# gcloud CLI
+source "$(brew --prefix)/share/google-cloud-sdk/path.zsh.inc"
+source "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc"
 
 # pnpm
 export PNPM_HOME="/Users/alm2/Library/pnpm"
@@ -108,3 +124,8 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
+
+autoload -U +X bashcompinit && bashcompinit
+complete -o nospace -C /opt/homebrew/bin/terraform terraform
+
+PATH=~/.console-ninja/.bin:$PATH
