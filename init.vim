@@ -87,12 +87,14 @@ let g:ruby_indent_hanging_elements = 0
 let g:ale_linters = {
 \   'ruby': ['rubocop'], 
 \   'javascript': ['eslint'],
+\   'typescript': ['eslint'],
 \   'go': ['gopls'],
 \}
 let g:ale_fixers = {
 \   '*': ['remove_trailing_lines', 'trim_whitespace'],
 \   'ruby': ['rubocop'], 
-\   'javascript': ['eslint'],
+\   'javascript': ['prettier'],
+\   'typescript': ['prettier'],
 \}
 let g:ale_virtualtext_cursor = 'disabled'
 highlight clear ALEWarning
@@ -158,8 +160,8 @@ set splitright
 nmap <Leader>s :%s//gc<Left><Left><Left>
 
 " copy/paste remap
-noremap <C-c> :w !pbcopy<CR><CR> 
-noremap <C-v> :r !pbpaste<CR><CR>
+noremap <Leader>c :w !pbcopy<CR><CR> 
+noremap <Leader>v :r !pbpaste<CR><CR>
 
 " folding
 set foldmethod=indent
