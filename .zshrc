@@ -1,19 +1,24 @@
 typeset -U PATH path
 
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
+export EDITOR="nvim"
+
+# History management
+HISTSIZE=10000
+SAVEHIST=10000
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_FIND_NO_DUPS
+setopt SHARE_HISTORY
+
+# p10k instant prompt
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-[ -f /opt/homebrew/etc/profile.d/autojump.sh ] && . /opt/homebrew/etc/profile.d/autojump.sh
+# autojump configuration
+AUTOJUMP_SH="$(brew --prefix)/etc/profile.d/autojump.sh"
+[ -f "$AUTOJUMP_SH" ] && . "$AUTOJUMP_SH"
 
-#jdk() {
-        #version=$1
-        #export JAVA_HOME=$(/usr/libexec/java_home -v"$version");
-        #java -version
-# }
-
+# fzf configuration
 if type rg &> /dev/null; then
   export FZF_DEFAULT_COMMAND='rg --hidden -g "!tmp/" -g "!.git/" -g "!node_modules" -l ""'
   export FZF_DEFAULT_OPTS=" \
@@ -23,47 +28,47 @@ if type rg &> /dev/null; then
     --color=marker:#f2d5cf,fg+:#c6d0f5,prompt:#ca9ee6,hl+:#e78284"
 fi
 
-# Path to your oh-my-zsh installation.
+# Path to oh-my-zsh installation
 export ZSH="$HOME/.oh-my-zsh"
 
-source /opt/homebrew/share/powerlevel10k/powerlevel10k.zsh-theme
+source "$(brew --prefix)/share/powerlevel10k/powerlevel10k.zsh-theme"
 
-# Uncomment the following line to change how often to auto-update (in days).
+# ZSH configuration
 export UPDATE_ZSH_DAYS=2
-
-# Hide '%' prompt indicator when file doesn't end with newline character.
 PROMPT_EOL_MARK=''
-
-# Uncomment the following line if pasting URLs and other text is messed up.
-# DISABLE_MAGIC_FUNCTIONS=true
-
-# Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
-
-# Uncomment the following line to display red dots whilst waiting for completion.
+ENABLE_CORRECTION="true"
 COMPLETION_WAITING_DOTS="true"
 
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
-
-plugins=(git macos zsh-autosuggestions)
+# Plugins
+plugins=(
+  git
+  macos
+  zsh-autosuggestions
+  zsh-syntax-highlighting
+  bundler
+  rbenv
+  fzf
+)
 
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
 export BAT_THEME="Catppuccin-frappe"
 export TERM=xterm-256color
-
-# You may need to manually set your language environment
 export LANG=en_US.UTF-8
 
+# NVM - Lazy loading for better performance
 export NVM_DIR="$HOME/.nvm"
-[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
-[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+# Replace the standard nvm loading with lazy loading
+nvm() {
+  unset -f nvm
+  local nvm_prefix="$(brew --prefix nvm)"
+  [ -s "$nvm_prefix/nvm.sh" ] && \. "$nvm_prefix/nvm.sh"
+  [ -s "$nvm_prefix/etc/bash_completion.d/nvm" ] && \. "$nvm_prefix/etc/bash_completion.d/nvm"
+  nvm "$@"
+}
 
-# place this after nvm initialization!
+# Load nvmrc when changing directories
 autoload -U add-zsh-hook
 load-nvmrc() {
   local nvmrc_path="$(nvm_find_nvmrc)"
@@ -82,36 +87,52 @@ load-nvmrc() {
   fi
 }
 add-zsh-hook chpwd load-nvmrc
-load-nvmrc
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+# Load p10k configuration
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-
+# PATH modifications
 export PATH="$HOME/.rbenv/bin:$PATH"
-export SPARK_HOME=/opt/homebrew/Cellar/apache-spark/3.5.0/libexec
+export PATH="$PATH:$HOME/.local/bin"
+export PATH="$(brew --prefix)/opt/sqlite/bin:$PATH"
+
+
+# Java and Spark configuration
+export JAVA_HOME="$(brew --prefix)/opt/openjdk/"
+export PATH="$JAVA_HOME:$PATH"
+export SPARK_HOME="$(brew --prefix)/Cellar/apache-spark/3.5.0/libexec"
 export PATH="$SPARK_HOME/bin/:$PATH"
 export PYTHONPATH="${SPARK_HOME}/python/:$PYTHONPATH"
 export PYTHONPATH="${SPARK_HOME}/python/lib/py4j-0.10.9.7-src.zip:$PYTHONPATH"
-export PATH="$PATH:$HOME/.local/bin"
-export PATH="/opt/homebrew/opt/sqlite/bin:$PATH"
-export JAVA_HOME="/opt/homebrew/opt/openjdk/"
-export PATH="$JAVA_HOME:$PATH"
 
-eval $(/opt/homebrew/bin/brew shellenv)
+# Initialize tools
+eval "$("$(brew --prefix)/bin/brew" shellenv)"
 eval "$(rbenv init - zsh)"
 eval "$(pyenv init -)"
 
-# My custom aliases
-alias seeing_is_believing="andyw8_seeing_is_believing"
+# My custom aliases - organized by category
+# Ruby/Rails aliases
 alias be="bundle exec"
 alias br="bin/rails"
-alias lg="lazygit"
+alias bi="bundle install"
+alias seeing_is_believing="andyw8_seeing_is_believing"
+
+# Navigation/System aliases
 alias e="exit"
+alias ..="cd .."
+alias ...="cd ../.."
+alias ls="ls -G"
+alias ll="ls -la"
+
+# Editor aliases
 alias vi='nvim'
-alias viv="vim ~/.config/nvim/init.vim"
-alias viz="vim ~/.zshrc"
-alias vit="vim ~/.tmux.conf"
+alias viv="nvim ~/.config/nvim/init.vim"
+alias viz="nvim ~/.zshrc"
+alias vit="nvim ~/.tmux.conf"
+alias lg="lazygit"
+
+# Project-specific aliases
+alias h2='$(npm prefix -s)/node_modules/.bin/shopify hydrogen'
 
 # gcloud CLI
 source "$(brew --prefix)/share/google-cloud-sdk/path.zsh.inc"
@@ -123,9 +144,8 @@ case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
-# pnpm end
 
+# Terraform completion
 autoload -U +X bashcompinit && bashcompinit
-complete -o nospace -C /opt/homebrew/bin/terraform terraform
+complete -o nospace -C "$(brew --prefix)/bin/terraform" terraform
 
-PATH=~/.console-ninja/.bin:$PATH
