@@ -6,12 +6,6 @@ SAVEHIST=10000
 setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_FIND_NO_DUPS
 setopt SHARE_HISTORY
-unsetopt correct
-
-# p10k instant prompt
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
 
 # fzf configuration
 # Set up fzf key bindings and fuzzy completion
@@ -19,10 +13,7 @@ if type rg &> /dev/null; then
   export FZF_DEFAULT_COMMAND='rg --hidden -g "!tmp/" -g "!.git/" -g "!node_modules" -l ""'
   export FZF_DEFAULT_OPTS=" \
     --height 80% --border
-    --layout reverse \
-    --color=bg+:#414559,bg:#303446,spinner:#f2d5cf,hl:#e78284 \
-    --color=fg:#c6d0f5,header:#e78284,info:#ca9ee6,pointer:#f2d5cf \
-    --color=marker:#f2d5cf,fg+:#c6d0f5,prompt:#ca9ee6,hl+:#e78284"
+    --layout reverse"
   fi
   export FZF_CTRL_T_OPTS="
     --walker-skip .git,node_modules,target
@@ -30,42 +21,46 @@ if type rg &> /dev/null; then
     --bind 'ctrl-/:change-preview-window(down|hidden|)'"
 source <(fzf --zsh)
 
-source "$(brew --prefix)/share/powerlevel10k/powerlevel10k.zsh-theme"
-
 # ZSH configuration
 PROMPT_EOL_MARK=''
-ENABLE_CORRECTION="false"
-COMPLETION_WAITING_DOTS="true"
 
-# Plugins
-plugins=(
-  bundler
-  colored-man-pages
-  git
-  you-should-use
-  zsh-autosuggestions
-  zsh-syntax-highlighting
-  zsh-vi-mode
-)
+# Define a specific, hidden location for completion dumps
+export ZSH_COMPDUMP="${ZDOTDIR:-$HOME}/.cache/zcompdump"
+# Ensure the directory exists
+mkdir -p "$(dirname "$ZSH_COMPDUMP")"
 
-source $ZSH/oh-my-zsh.sh
+# Antidote configuration
+source $(brew --prefix)/opt/antidote/share/antidote/antidote.zsh
+antidote load ~/.zsh_plugins.txt ~/.zsh_plugins.zsh
+
+# Starship configuration
+export STARSHIP_CONFIG=~/.config/starship/starship.toml
 
 # User configuration
-export BAT_THEME="Catppuccin-frappe"
+# export BAT_THEME="Catppuccin-frappe"
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 
 # Load nvm
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
-# Load p10k configuration
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
 # My custom aliases - organized by category
 # Make commands interactive
 alias cp="cp -iv"
-# alias ls="ls -FGh"
+alias l="ls -lah"
 alias ls="eza -snew --icons --group-directories-first --color=always"
 alias mv="mv -iv"
 alias rm="rm -iv"
+
+# Git aliases
+alias g='git'
+alias gst='git status'
+alias gl='git pull'
+alias gp='git push'
+alias gco='git checkout'
+alias gcb='git checkout -b'
+# alias ga='git add'
+alias gaa='git add --all'
+alias gcm='git commit -m'
 
 # Ruby/Rails aliases
 alias be="bundle exec"
@@ -78,7 +73,6 @@ alias ..="cd .."
 alias ...="cd ../.."
 
 # Apps
-# alias j="z"
 alias ff="fastfetch"
 alias news="newsboat"
 alias y="yazi"
@@ -113,10 +107,11 @@ esac
 autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C "$(brew --prefix)/bin/terraform" terraform
 
-# export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense' # optional
-# zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
-# zstyle ':completion:*:git:*' group-order 'main commands' 'alias commands' 'external commands'
-# source <(carapace _carapace)
+# Carapace configuration
+autoload -U compinit && compinit
+export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense' # optional
+zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
+source <(carapace _carapace)
 
 # Initialize tools
 . "$HOME/.atuin/bin/env"
@@ -127,3 +122,4 @@ eval "$(pyenv init - zsh)"
 eval "$(zoxide init zsh --cmd j)"
 eval "$(thefuck --alias)"
 eval "$(thefuck --alias fk)"
+eval "$(starship init zsh)"

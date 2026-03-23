@@ -1,0 +1,6 @@
+# External plugins
+wfxr/forgit
+MichaelAquilina/zsh-you-should-use
+zsh-users/zsh-autosuggestions
+zdharma-continuum/fast-syntax-highlighting  # Faster than zsh-syntax-highlighting
+jeffreytse/zsh-vi-mode                      # The gold standard for VI mode

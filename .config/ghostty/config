@@ -1,10 +1,8 @@
 # Run `ghostty +show-config --default --docs` to view a list of
 # all available config options and their default values.
 
-# theme = Catppuccin Macchiato
-# theme = Catppuccin Mocha
-# theme = TokyoNight
-theme = TokyoNight Moon
+# theme = dark:Catppuccin Frappe,light:Catppuccin Latte
+theme = dark:TokyoNight,light:Rose Pine Dawn
 macos-titlebar-style = tabs
 macos-window-buttons = hidden
 macos-non-native-fullscreen = true
@@ -27,3 +25,10 @@ keybind = ctrl+shift+j=resize_split:down,40
 keybind = ctrl+shift+k=resize_split:up,40
 keybind = ctrl+shift+l=resize_split:right,40
 
+# Transparency
+background-opacity-cells=true
+background-blur=macos-glass-regular
+background-opacity = 0.88
+
+# macos-icon: blueprint, chalkboard, glass, holographic, retro, xray
+macos-icon = holographic
