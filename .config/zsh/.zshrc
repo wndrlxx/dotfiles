@@ -1,3 +1,6 @@
+eval "$("$(brew --prefix)/bin/brew" shellenv)"
+
+# remove duplicate PATH entries
 typeset -U PATH path
 
 # History management
@@ -6,47 +9,80 @@ SAVEHIST=10000
 setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_FIND_NO_DUPS
 setopt SHARE_HISTORY
+setopt glob_dots # include dotfiles in globbing
 
-# fzf configuration
-# Set up fzf key bindings and fuzzy completion
-if type rg &> /dev/null; then
-  export FZF_DEFAULT_COMMAND='rg --hidden -g "!tmp/" -g "!.git/" -g "!node_modules" -l ""'
-  export FZF_DEFAULT_OPTS=" \
-    --height 80% --border
-    --layout reverse"
-  fi
-  export FZF_CTRL_T_OPTS="
-    --walker-skip .git,node_modules,target
-    --preview 'fzf-preview.sh {}' \
-    --bind 'ctrl-/:change-preview-window(down|hidden|)'"
-source <(fzf --zsh)
-
-# ZSH configuration
+# zsh config
 PROMPT_EOL_MARK=''
-
-# Define a specific, hidden location for completion dumps
+# Completion dump location
 export ZSH_COMPDUMP="${ZDOTDIR:-$HOME}/.cache/zcompdump"
-# Ensure the directory exists
-mkdir -p "$(dirname "$ZSH_COMPDUMP")"
+# Completions — single compinit call with 24hr cache guard
+autoload -Uz compinit
+if [[ -n ${ZSH_COMPDUMP}(#qN.mh+24) ]]; then
+    compinit -d "$ZSH_COMPDUMP"
+else
+    compinit -C -d "$ZSH_COMPDUMP"
+fi
+autoload -U +X bashcompinit && bashcompinit
+complete -o nospace -C "$(brew --prefix)/bin/terraform" terraform
 
-# Antidote configuration
-source $(brew --prefix)/opt/antidote/share/antidote/antidote.zsh
-antidote load ~/.zsh_plugins.txt ~/.zsh_plugins.zsh
+# fzf config
+source <(fzf --zsh)
+export FZF_DEFAULT_OPTS=" \
+  --height 80% --border \
+  --layout reverse \
+  --preview-window=right:70%"
+export FZF_DEFAULT_COMMAND=' \
+  rg --hidden \
+  -g "!.git/" -g "!node_modules/" -g "!tmp/" \
+  -l ""'
+export FZF_CTRL_T_OPTS=" \
+  --walker-skip .git,node_modules,target \
+  --preview 'fzf-preview.sh {}' \
+  --bind 'ctrl-/:change-preview-window(down|hidden|)'"
+export FORGIT_FZF_DEFAULT_OPTS="--preview-window=right:75%"
+# Git/delta theme — switch based on OS light/dark mode
+if [[ "$(defaults read -g AppleInterfaceStyle 2>/dev/null)" == "Dark" ]]; then
+    export BAT_THEME="tokyonight_night"
+    export DELTA_FEATURES="dark-mode"
+    export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
+        --color=fg:#c0caf5,bg:#1a1b26,hl:#bb9af7 \
+        --color=fg+:#c0caf5,bg+:#1a1b26,hl+:#7dcfff \
+        --color=info:#7aa2f7,prompt:#7dcfff,pointer:#7dcfff  \
+        --color=marker:#9ece6a,spinner:#9ece6a,header:#9ece6a"
+else
+    export BAT_THEME="rose-pine-dawn"
+    export DELTA_FEATURES="light-mode"
+    export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
+        --color=fg:#797593,bg:#faf4ed,hl:#d7827e \
+        --color=fg+:#575279,bg+:#f2e9e1,hl+:#d7827e \
+        --color=border:#dfdad9,header:#286983,gutter:#faf4ed \
+        --color=spinner:#ea9d34,info:#56949f \
+        --color=pointer:#907aa9,marker:#b4637a,prompt:#797593"
+fi
+bindkey -e  # force emacs mode; overrides vi mode set by fzf via $EDITOR
 
-# Starship configuration
-export STARSHIP_CONFIG=~/.config/starship/starship.toml
+# zsh hooks
+chpwd() {
+  eza -larh --icons --group-directories-first --color=always
+}
 
-# User configuration
-# export BAT_THEME="Catppuccin-frappe"
-export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+diff() {
+  command diff -u "$@" | delta --side-by-side --line-numbers
+}
 
-# Load nvm
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+# Suffix aliases
+alias -s go="$EDITOR"
+alias -s js="$EDITOR"
+alias -s json="jless"
+alias -s md="bat"
+alias -s py="$EDITOR"
+alias -s rb="$EDITOR"
+alias -s ts="$EDITOR"
+alias -s yaml="bat --language=yaml"
 
-# My custom aliases - organized by category
 # Make commands interactive
 alias cp="cp -iv"
-alias l="ls -lah"
+alias l="ls -larh"
 alias ls="eza -snew --icons --group-directories-first --color=always"
 alias mv="mv -iv"
 alias rm="rm -iv"
@@ -58,7 +94,6 @@ alias gl='git pull'
 alias gp='git push'
 alias gco='git checkout'
 alias gcb='git checkout -b'
-# alias ga='git add'
 alias gaa='git add --all'
 alias gcm='git commit -m'
 
@@ -68,9 +103,10 @@ alias br="bin/rails"
 alias bi="bundle install"
 
 # Navigation/System aliases
-alias e="exit"
 alias ..="cd .."
 alias ...="cd ../.."
+alias e="exit"
+alias sz="source ~/.config/zsh/.zshrc"
 
 # Apps
 alias ff="fastfetch"
@@ -82,8 +118,10 @@ alias n="nvim"
 alias vi="nvim"
 alias viv="nvim ~/.config/nvim"
 alias vin="nvim ~/.config/nvim"
-alias viz="nvim ~/.zshrc"
+alias viz="nvim ~/.config/zsh/.zshrc"
 alias vize="nvim ~/.zshenv"
+alias vigc="nvim ~/.config/git/config"
+alias vigi="nvim ~/.config/git/ignore"
 alias vit="nvim ~/.config/tmux/tmux.conf"
 alias via="nvim ~/.config/aerospace/aerospace.toml"
 alias vis="nvim ~/.config/sketchybar/sketchybarrc"
@@ -93,33 +131,36 @@ alias lg="lazygit"
 # Project-specific aliases
 alias h2='$(npm prefix -s)/node_modules/.bin/shopify hydrogen'
 
-# gcloud CLI
-source "$(brew --prefix)/share/google-cloud-sdk/path.zsh.inc"
-source "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc"
+# Lazy load tools
+gcloud() {
+    unset -f gcloud
+    source "$(brew --prefix)/share/google-cloud-sdk/path.zsh.inc"
+    source "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc"
+    gcloud "$@"
+}
+fuck() {
+    unset -f fuck fk
+    eval "$(thefuck --alias)"
+    eval "$(thefuck --alias fk)"
+    fuck "$@"
+}
+fk() { fuck "$@"; }
+pyenv() {
+    unset -f pyenv
+    eval "$(pyenv init - zsh)"
+    pyenv "$@"
+}
 
-# pnpm
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-
-# Terraform completion
-autoload -U +X bashcompinit && bashcompinit
-complete -o nospace -C "$(brew --prefix)/bin/terraform" terraform
-
-# Carapace configuration
-autoload -U compinit && compinit
-export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense' # optional
-zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
-source <(carapace _carapace)
+# Antidote zsh plugin manager config
+source $(brew --prefix)/opt/antidote/share/antidote/antidote.zsh
+antidote load ~/.config/zsh/.zsh_plugins.txt ~/.config/zsh/.zsh_plugins.zsh
 
 # Initialize tools
 . "$HOME/.atuin/bin/env"
 eval "$(atuin init zsh)"
-eval "$("$(brew --prefix)/bin/brew" shellenv)"
+eval "$(fnm env --use-on-cd)"
 eval "$(rbenv init - zsh)"
-eval "$(pyenv init - zsh)"
-eval "$(zoxide init zsh --cmd j)"
-eval "$(thefuck --alias)"
-eval "$(thefuck --alias fk)"
+eval "$(zoxide init zsh --cmd cd)"
+
+# Starship prompt — must be last
 eval "$(starship init zsh)"
