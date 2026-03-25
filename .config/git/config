@@ -2,16 +2,21 @@
   email = 64194574+wndrlxx@users.noreply.github.com
   name = wndrlxx
 [core]
-	excludesfile = ~/.gitignore_global
   editor = nvim
   pager = delta
 [interactive]
   diffFilter = delta --color-only
 [delta]
 	navigate = true
-	side-by-side = true
 	line-numbers = true
-  syntax-theme = 'Catppuccin-mocha'
+	; side-by-side = true
+  ; width = 120
+[delta "light-mode"]
+  light = true
+  syntax-theme = rose-pine-dawn
+[delta "dark-mode"]
+  dark = true
+  syntax-theme = tokyonight_night
 [merge]
   conflictstyle = diff3
 [diff]
