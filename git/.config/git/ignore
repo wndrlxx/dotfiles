@@ -2,3 +2,4 @@
 .vscode
 .idea
 *.swp
+.zsh_history

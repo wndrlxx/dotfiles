@@ -5,6 +5,22 @@
             "complex_modifications": {
                 "rules": [
                     {
+                        "description": "Option + Command + S → Open Claude",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "s",
+                                    "modifiers": {
+                                        "mandatory": ["option", "command"],
+                                        "optional": ["any"]
+                                    }
+                                },
+                                "to": [{ "shell_command": "open -a Claude" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
                         "description": "Option + Command + E → Open Ellie",
                         "manipulators": [
                             {
@@ -48,22 +64,6 @@
                                     }
                                 },
                                 "to": [{ "shell_command": "open -a ProtonVPN" }],
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
-                        "description": "Option + Command + C → Open Calendar",
-                        "manipulators": [
-                            {
-                                "from": {
-                                    "key_code": "c",
-                                    "modifiers": {
-                                        "mandatory": ["option", "command"],
-                                        "optional": ["any"]
-                                    }
-                                },
-                                "to": [{ "shell_command": "open -a Calendar" }],
                                 "type": "basic"
                             }
                         ]
@@ -149,11 +149,11 @@
                         ]
                     },
                     {
-                        "description": "Option + Command + J → Open ChatGPT",
+                        "description": "Option + Command + D → Open ChatGPT",
                         "manipulators": [
                             {
                                 "from": {
-                                    "key_code": "j",
+                                    "key_code": "d",
                                     "modifiers": {
                                         "mandatory": ["option", "command"],
                                         "optional": ["any"]
@@ -165,11 +165,11 @@
                         ]
                     },
                     {
-                        "description": "Option + Command + O → Open Google Chrome",
+                        "description": "Option + Command + C → Open Google Chrome",
                         "manipulators": [
                             {
                                 "from": {
-                                    "key_code": "o",
+                                    "key_code": "c",
                                     "modifiers": {
                                         "mandatory": ["option", "command"],
                                         "optional": ["any"]
