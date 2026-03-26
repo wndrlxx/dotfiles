@@ -9,6 +9,7 @@ SAVEHIST=10000
 setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_FIND_NO_DUPS
 setopt SHARE_HISTORY
+setopt autocd # change directory without typing cd
 setopt glob_dots # include dotfiles in globbing
 
 # zsh config
@@ -106,6 +107,7 @@ alias bi="bundle install"
 alias ..="cd .."
 alias ...="cd ../.."
 alias e="exit"
+alias j="cd"
 alias sz="source ~/.config/zsh/.zshrc"
 
 # Apps
