@@ -1,10 +1,14 @@
 # https://ghostty.org/docs/config/reference
 
-font-size = 18
-theme = dark:TokyoNight,light:Rose Pine Dawn
+font-size = 20
+theme = dark:TokyoNight, light:Rose Pine Dawn
+
+# Transparency
+background-opacity = 0.8
+background-opacity-cells=true
+background-blur=macos-glass-regular
 
 macos-icon = holographic
-macos-non-native-fullscreen = true
 macos-titlebar-style = tabs
 macos-window-buttons = hidden
 window-padding-balance = true
@@ -26,9 +30,4 @@ keybind = super+shift+j=resize_split:down,40
 keybind = super+shift+k=resize_split:up,40
 keybind = super+shift+l=resize_split:right,40
 keybind = super+shift+equal=equalize_splits
-
-# Transparency
-background-opacity = 0.8
-background-opacity-cells=true
-background-blur=macos-glass-regular
 
