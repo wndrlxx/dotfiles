@@ -5,6 +5,22 @@
             "complex_modifications": {
                 "rules": [
                     {
+                        "description": "Option + Command + K → Open Karabiner-Elements",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "k",
+                                    "modifiers": {
+                                        "mandatory": ["option", "command"],
+                                        "optional": ["any"]
+                                    }
+                                },
+                                "to": [{ "shell_command": "open -a Karabiner-Elements" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
                         "description": "Option + Command + S → Open Claude",
                         "manipulators": [
                             {
@@ -165,7 +181,7 @@
                         ]
                     },
                     {
-                        "description": "Option + Command + C → Open Google Chrome",
+                        "description": "Option + Command + C → Open Helium Browser",
                         "manipulators": [
                             {
                                 "from": {
@@ -175,7 +191,7 @@
                                         "optional": ["any"]
                                     }
                                 },
-                                "to": [{ "software_function": { "open_application": { "bundle_identifier": "com.google.Chrome" } } }],
+                                "to": [{ "shell_command": "open -a Helium" }],
                                 "type": "basic"
                             }
                         ]
