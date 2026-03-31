@@ -145,12 +145,12 @@ run = 'layout floating'
 
 # Gaps between windows (inner-*) and between monitor edges (outer-*).
 [gaps]
-    inner.horizontal = [{ monitor.main = 12 }, { monitor.secondary = 8 }, 12]
-    inner.vertical = [{ monitor.main = 12 }, { monitor.secondary = 8 }, 12]
-    outer.top = [{ monitor.main = 24 }, { monitor.secondary = 8 }, 24]
-    outer.right = [{ monitor.main = 12 }, { monitor.secondary = 8 }, 12]
-    outer.bottom = [{ monitor.main = 12 }, { monitor.secondary = 8 }, 12]
-    outer.left = [{ monitor.main = 12 }, { monitor.secondary = 8 }, 12]
+    inner.horizontal = [{ monitor.'built-in' = 8 }, 12]
+    inner.vertical = [{ monitor.'built-in' = 8 }, 12]
+    outer.top = [{ monitor.'built-in' = 8 }, 24]
+    outer.right = [{ monitor.'built-in' = 8 }, 12]
+    outer.bottom = [{ monitor.'built-in' = 8 }, 12]
+    outer.left = [{ monitor.'built-in' = 8 }, 12]
 
 # 'main' binding mode declaration
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
