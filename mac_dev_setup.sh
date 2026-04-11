@@ -29,43 +29,10 @@ defaults write -g NSWindowShouldDragOnGesture -bool true
 # disable windows opening animations
 defaults write -g NSAutomaticWindowAnimationsEnabled -bool false
 
-brew install --cask nikitabobko/tap/aerospace &&
-  brew install --cask antinote &&
-  brew install --cask bitwarden &&
-  brew install --cask google-chrome &&
-  brew install --cask ghostty &&
-  brew install --cask helium-browser &&
-  brew install --cask karabiner-elements
+./brew_install.sh
 
-brew tap FelixKratz/formulae
-brew install sketchybar
+./mise_install.sh
 
-brew install bat &&
-  brew install btop &&
-  brew install eza &&
-  brew install ffmpeg &&
-  brew install fzf &&
-  brew install gh &&
-  brew install imagemagick &&
-  brew install jq &&
-  brew install lazygit &&
-  brew install mitmproxy &&
-  brew install neofetch &&
-  brew install nvm &&
-  brew install pnpm &&
-  brew install pyenv &&
-  brew install sqlite &&
-  brew install starship &&
-  brew install stow &&
-  brew install terraform &&
-  brew install wget &&
-  brew install yt-dlp &&
-  brew install zoxide
-
-brew doctor
-# expect "Your system is ready to brew."
-
-# TODO: clone dotfiles
-# TODO: run stow with target
+./load_dotfiles.sh
 
 exit 0

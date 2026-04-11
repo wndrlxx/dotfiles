@@ -1,36 +1,19 @@
 #!/bin/bash
 
-sudo apt update
-sudo apt install bat \
-  btop \
-  eza \
-  ffmpeg \
-  fzf \
-  git \
-  gh \
-  imagemagick \
-  jq \
-  lazygit \
-  mitmproxy \
-  neovim \
-  nvm \
-  pnpm \
-  pyenv \
-  sqlite \
-  starship \
-  stow \
-  terraform \
-  wget \
-  yt-dlp \
-  zsh \
-  zoxide
+./apt_install.sh
 
-sudo snap install bitwarden
+./mise_install.sh
 
-# install chrome
-# install ghostty
+./gnome_extensions_install.sh
 
-# TODO: clone dotfiles
-# TODO: run stow with target
+./linux_workspace_keybindings.sh
+
+./load_dotfiles.sh
+
+# symlink batcat as bat
+mkdir -p ~/.local/bin
+ln -s /usr/bin/batcat ~/.local/bin/bat
+# NOTE: must run after "stow -t ~ bat" to detect .config/bat/themes
+bat cache --build
 
 exit 0
