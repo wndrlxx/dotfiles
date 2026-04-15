@@ -1,21 +1,24 @@
 # https://ghostty.org/docs/config/reference
+# ctrl+shift+, reload config Linux
+# cmd+shift+,  reload config Mac
 
-font-size = 20
+# Load platform-specific files if they exist
+config-file = ?macos.conf
+config-file = ?linux.conf
+
+font-size = 13
 theme = dark:TokyoNight, light:Rose Pine Dawn
 
 # Transparency
 background-opacity = 0.8
 background-opacity-cells=true
-background-blur=macos-glass-regular
-
-macos-icon = holographic
-macos-titlebar-style = tabs
-macos-window-buttons = hidden
 window-padding-balance = true
 
-# Create splits
+# Create/Close splits
 keybind = super+shift+backslash=new_split:right
 keybind = super+shift+minus=new_split:down
+# "surface" is a window, tab, split, etc.
+keybind = super+w=close_surface
 
 # Navigate splits
 keybind = super+opt+h=goto_split:left
