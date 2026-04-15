@@ -2,11 +2,15 @@
 
 brew install --cask nikitabobko/tap/aerospace &&
   brew install --cask antinote &&
+  brew install --cask alcove &&
   brew install --cask bitwarden &&
+  brew install --cask dockdoor &&
   brew install --cask google-chrome &&
   brew install --cask ghostty &&
   brew install --cask helium-browser &&
-  brew install --cask karabiner-elements
+  brew install --cask karabiner-elements &&
+  brew install --cask linearmouse &&
+  brew install --cask shottr
 
 brew tap FelixKratz/formulae
 brew install sketchybar
