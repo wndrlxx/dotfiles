@@ -33,6 +33,16 @@ end)
 
 config.keys = {
 	{
+		key = "Space",
+		mods = "SUPER|SHIFT",
+		action = wezterm.action.QuickSelect,
+	},
+	{
+		key = "X",
+		mods = "SUPER|SHIFT",
+		action = wezterm.action.ActivateCopyMode,
+	},
+	{
 		key = "|",
 		mods = "SUPER|SHIFT",
 		action = wezterm.action.SplitPane({
@@ -84,22 +94,22 @@ config.keys = {
 	{
 		key = "h",
 		mods = "SUPER|SHIFT",
-		action = wezterm.action.AdjustPaneSize({ "Left", 1 }),
+		action = wezterm.action.AdjustPaneSize({ "Left", 4 }),
 	},
 	{
 		key = "j",
 		mods = "SUPER|SHIFT",
-		action = wezterm.action.AdjustPaneSize({ "Down", 1 }),
+		action = wezterm.action.AdjustPaneSize({ "Down", 4 }),
 	},
 	{
 		key = "k",
 		mods = "SUPER|SHIFT",
-		action = wezterm.action.AdjustPaneSize({ "Up", 1 }),
+		action = wezterm.action.AdjustPaneSize({ "Up", 4 }),
 	},
 	{
 		key = "l",
 		mods = "SUPER|SHIFT",
-		action = wezterm.action.AdjustPaneSize({ "Right", 1 }),
+		action = wezterm.action.AdjustPaneSize({ "Right", 4 }),
 	},
 }
 
