@@ -93,6 +93,16 @@ diff() {
   command diff -u "$@" | delta --side-by-side --line-numbers
 }
 
+# lazygit wrapper to switch themes based on OS light/dark mode
+function lg() {
+  if [[ "$INTERFACE_STYLE" == "Dark" ]]; then
+    local theme="$HOME/.config/lazygit/tokyo-night.yml"
+  else
+    local theme="$HOME/.config/lazygit/rose-pine-dawn.yml"
+  fi
+  lazygit --use-config-file="$HOME/.config/lazygit/config.yml,$theme" "$@"
+}
+
 # Suffix aliases
 alias -s go="$EDITOR"
 alias -s js="$EDITOR"
@@ -150,7 +160,7 @@ alias vit="nvim ~/.config/tmux/tmux.conf"
 alias via="nvim ~/.config/aerospace/aerospace.toml"
 alias vis="nvim ~/.config/sketchybar/sketchybarrc"
 alias vig="nvim ~/.config/ghostty/config"
-alias lg="lazygit"
+alias viw="nvim ~/.config/wezterm/wezterm.lua"
 
 # Project-specific aliases
 alias h2='$(npm prefix -s)/node_modules/.bin/shopify hydrogen'
