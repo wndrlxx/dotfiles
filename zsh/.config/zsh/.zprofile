@@ -1,6 +1,10 @@
 # Homebrew
 export PATH="/opt/homebrew/bin:$PATH"
 
+# Go
+# [ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
+export PATH=$PATH:$HOME/go/bin
+
 # Java
 export JAVA_HOME="/opt/homebrew/opt/openjdk/"
 export PATH="$JAVA_HOME/bin:$PATH"
