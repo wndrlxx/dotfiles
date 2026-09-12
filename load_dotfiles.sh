@@ -27,7 +27,6 @@ stow -t ~ git
 stow -t ~ ghostty
 stow -t ~ nvim
 stow -t ~ starship
-stow -t ~ wezterm
 stow -t ~ zsh
 
 source "$HOME/.config/zsh/.zshrc"

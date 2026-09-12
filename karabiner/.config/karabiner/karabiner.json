@@ -101,7 +101,7 @@
                         ]
                     },
                     {
-                        "description": "Option + Command + T → Open Terminal (WezTerm)",
+                        "description": "Option + Command + T → Open Terminal (Ghostty)",
                         "manipulators": [
                             {
                                 "from": {
@@ -111,7 +111,7 @@
                                         "optional": ["any"]
                                     }
                                 },
-                                "to": [{ "shell_command": "open -a WezTerm" }],
+                                "to": [{ "shell_command": "open -a Ghostty" }],
                                 "type": "basic"
                             }
                         ]

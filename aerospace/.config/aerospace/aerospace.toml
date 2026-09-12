@@ -230,7 +230,7 @@ run = 'layout floating'
 
     # Disable "hide application"
     cmd-h = []
-    # cmd-alt-h = [] # goto_split:left binding in Ghostty/Wezterm
+    # cmd-alt-h = [] # goto_split:left binding in Ghostty
 
 # 'service' binding mode declaration.
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
