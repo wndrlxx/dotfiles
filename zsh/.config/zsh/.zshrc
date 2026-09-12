@@ -160,7 +160,6 @@ alias vit="nvim ~/.config/tmux/tmux.conf"
 alias via="nvim ~/.config/aerospace/aerospace.toml"
 alias vis="nvim ~/.config/sketchybar/sketchybarrc"
 alias vig="nvim ~/.config/ghostty/config"
-alias viw="nvim ~/.config/wezterm/wezterm.lua"
 
 # Project-specific aliases
 alias h2='$(npm prefix -s)/node_modules/.bin/shopify hydrogen'

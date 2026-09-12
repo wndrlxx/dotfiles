@@ -5,7 +5,6 @@ brew install --cask nikitabobko/tap/aerospace &&
   brew install --cask alcove &&
   brew install --cask bitwarden &&
   brew install --cask google-chrome &&
-  brew install --cask wezterm &&
   brew install --cask helium-browser &&
   brew install --cask karabiner-elements &&
   brew install --cask linearmouse &&
