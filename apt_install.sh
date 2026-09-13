@@ -7,6 +7,7 @@ sudo apt install bat \
   ffmpeg \
   gh \
   git \
+  herdr \
   imagemagick \
   jq \
   libsqlite3-dev \
