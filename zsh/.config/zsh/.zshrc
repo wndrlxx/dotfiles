@@ -122,13 +122,31 @@ alias rm="rm -iv"
 
 # Git aliases
 alias g='git'
+alias ga='git add'
+alias gaa='git add --all'
+alias gb='git branch'
+alias gba='git branch --all'
+alias gbd='git branch --delete'
+alias gbr='git branch --remote'
 alias gst='git status'
 alias gl='git pull'
 alias gp='git push'
+alias gpf='git push --force-with-lease --force-if-includes'
 alias gco='git checkout'
 alias gcb='git checkout -b'
-alias gaa='git add --all'
+alias gcp='git cherry-pick'
+alias gcpa='git cherry-pick --abort'
+alias gcpc='git cherry-pick --continue'
 alias gcm='git commit -m'
+alias gd='git diff'
+alias gds='git diff --staged'
+alias gf='git fetch'
+alias glog='git log --oneline --decorate --graph'
+alias gwt='git worktree'
+alias gwta='git worktree add'
+alias gwtl='git worktree list'
+alias gwtmv='git worktree move'
+alias gwtrm='git worktree remove'
 
 # Ruby/Rails aliases
 alias be="bundle exec"
@@ -148,8 +166,8 @@ alias news="newsboat"
 alias y="yazi"
 
 # Editor aliases
-alias n="nvim"
-alias vi="nvim"
+alias n="nvim ."
+alias vi="nvim ."
 alias viv="nvim ~/.config/nvim"
 alias vin="nvim ~/.config/nvim"
 alias viz="nvim ~/.config/zsh/.zshrc"
