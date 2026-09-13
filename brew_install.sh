@@ -4,11 +4,13 @@ brew install --cask nikitabobko/tap/aerospace &&
   brew install --cask antinote &&
   brew install --cask alcove &&
   brew install --cask bitwarden &&
+  brew install --cask claude-code &&
+  brew install --cask ghostty &&
   brew install --cask google-chrome &&
-  brew install --cask helium-browser &&
   brew install --cask karabiner-elements &&
   brew install --cask linearmouse &&
-  brew install --cask shottr
+  brew install --cask shottr &&
+  brew install --cask superwhisper
 
 brew tap FelixKratz/formulae
 brew install sketchybar
@@ -24,6 +26,8 @@ brew install bat &&
   brew install lazygit &&
   brew install mitmproxy &&
   brew install neofetch &&
+  brew install anomalyco/tap/opencode &&
+  brew install pi-coding-agent &&
   brew install pnpm &&
   brew install sqlite &&
   brew install starship &&

@@ -6,13 +6,13 @@ mise use -g atuin@latest \
   fastfetch@latest \
   fzf@latest \
   go@latest \
+  herdr@latest \
   jless@latest \
   lazygit@latest \
   neovim@latest \
   node@latest \
   pipx@latest \
   pnpm@latest \
-  python@latest \
   ripgrep@latest \
   ruby@latest \
   rust@latest \
