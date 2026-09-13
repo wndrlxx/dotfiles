@@ -29,12 +29,15 @@ default-root-container-layout = 'tiles'
 #               tall monitor (anything higher than wide) gets vertical orientation
 default-root-container-orientation = 'auto'
 
+
 # Mouse follows focus when focused monitor changes
 # Drop it from your config, if you don't like this behavior
 # See https://nikitabobko.github.io/AeroSpace/guide#on-focus-changed-callbacks
 # See https://nikitabobko.github.io/AeroSpace/commands#move-mouse
 # Fallback value (if you omit the key): on-focused-monitor-changed = []
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
+
+focus-follows-mouse.enabled = true
 
 # You can effectively turn off macOS "Hide application" (cmd-h) feature by toggling this flag
 # Useful if you don't use this macOS feature, but accidentally hit cmd-h or cmd-alt-h key
@@ -48,7 +51,7 @@ exec-on-workspace-change = ['/bin/bash', '-c',
 
 [[on-window-detected]]
 if.app-name-regex-substring = 'ellie'
-run = ['layout tiling','move-node-to-workspace 1']
+run = ['layout floating','move-node-to-workspace 1']
 
 [[on-window-detected]]
 if.app-name-regex-substring = 'todoist'
@@ -72,10 +75,6 @@ run = ['layout tiling','move-node-to-workspace 2']
 
 [[on-window-detected]]
 if.app-name-regex-substring = 'chrome'
-run = ['layout tiling','move-node-to-workspace 3']
-
-[[on-window-detected]]
-if.app-name-regex-substring = 'helix'
 run = ['layout tiling','move-node-to-workspace 3']
 
 [[on-window-detected]]
@@ -228,9 +227,9 @@ run = 'layout floating'
     # See: https://nikitabobko.github.io/AeroSpace/commands#mode
     alt-shift-semicolon = 'mode service'
 
-    # Disable "hide application"
-    cmd-h = []
-    # cmd-alt-h = [] # goto_split:left binding in Ghostty
+     # Disable "hide application"
+     cmd-h = []
+     # cmd-alt-h = [] # goto_split:left binding in Ghostty
 
 # 'service' binding mode declaration.
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
