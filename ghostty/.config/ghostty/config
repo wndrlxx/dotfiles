@@ -6,12 +6,11 @@
 config-file = ?macos.conf
 config-file = ?linux.conf
 
-font-size = 13
+font-size = 15
 theme = dark:TokyoNight, light:Rose Pine Dawn
 
 # Transparency
-background-opacity = 0.8
-background-opacity-cells=true
+background-opacity-cells = true
 window-padding-balance = true
 
 # Create/Close splits
