@@ -2,6 +2,30 @@ onboarding = false
 
 [keys]
 prefix = "ctrl+space"
+goto = "ctrl+f"
+previous_workspace = "ctrl+shift+k"
+next_workspace = "ctrl+shift+j"
+new_tab = "ctrl+t"
+previous_tab = "ctrl+shift+h"
+next_tab = "ctrl+shift+l"
+close_tab = "ctrl+shift+x"
+split_vertical = "ctrl+alt+\\"
+split_horizontal = "ctrl+alt+-"
+close_pane = "ctrl+alt+x"
+focus_pane_left = "ctrl+alt+h"
+focus_pane_down = "ctrl+alt+j"
+focus_pane_up = "ctrl+alt+k"
+focus_pane_right = "ctrl+alt+l"
+toggle_sidebar = "prefix+p"
+
+# Lazygit over the focused pane. q closes it.
+[[keys.command]]
+description = "Lazygit"
+key = ["prefix+l"]
+type = "popup"
+command = "cd \"${HERDR_ACTIVE_PANE_CWD:-.}\" && exec /opt/homebrew/bin/lazygit"
+width = "95%"
+height = "95%"
 
 [theme]
 auto_switch = true
