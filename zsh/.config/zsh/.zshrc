@@ -167,6 +167,7 @@ alias sz="source ~/.config/zsh/.zshrc"
 alias ff="fastfetch"
 alias news="newsboat"
 alias y="yazi"
+alias h="herdr"
 
 # Editor aliases
 alias n="nvim ."

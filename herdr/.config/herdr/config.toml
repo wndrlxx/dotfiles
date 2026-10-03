@@ -30,7 +30,7 @@ height = "95%"
 [theme]
 auto_switch = true
 dark_name = "tokyo-night"
-light_name = "rose-pine-dawn"
+light_name = "catppuccin-latte"
 
 [ui.toast]
 delivery = "herdr"
@@ -39,6 +39,11 @@ delivery = "herdr"
 enabled = true
 
 [ui]
+pane_borders = "always"
+pane_outer_borders = true
+pane_gaps = true
+# Vivid violet for clear pane focus contrast
+accent = "#8b5cf6"
 status_indicators = "symbols"
 show_agent_labels_on_pane_borders = true
 agent_panel_sort = "spaces"

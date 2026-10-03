@@ -21,6 +21,7 @@ brew install bat &&
   brew install ffmpeg &&
   brew install fzf &&
   brew install gh &&
+  brew install herdr &&
   brew install imagemagick &&
   brew install jq &&
   brew install lazygit &&
