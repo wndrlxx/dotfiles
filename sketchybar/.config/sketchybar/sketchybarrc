@@ -23,8 +23,8 @@ default=(
   label.color=0xffffffff
   icon.padding_left=0
   icon.padding_right=0
-  label.padding_left=8
-  label.padding_right=9
+  label.padding_left=7
+  label.padding_right=8
 )
 sketchybar --default "${default[@]}"
 
