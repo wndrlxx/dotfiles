@@ -27,6 +27,7 @@ stow -t ~ git
 stow -t ~ ghostty
 stow -t ~ herdr
 stow -t ~ nvim
+stow -t ~ pi
 stow -t ~ starship
 stow -t ~ zsh
 
