@@ -1,3 +1,6 @@
+# Use ~/.config as the base directory for XDG-compatible app configuration
+export XDG_CONFIG_HOME="$HOME/.config"
+
 # Homebrew
 export PATH="/opt/homebrew/bin:$PATH"
 

@@ -1,0 +1,42 @@
+{
+  "lastChangelogVersion": "1.0.1",
+  "theme": "catppuccin-latte/tokyo-night",
+  "defaultProvider": "openai-codex",
+  "defaultModel": "gpt-6.1-sol",
+  "hideThinkingBlock": true,
+  "defaultThinkingLevel": "medium",
+  "packages": [
+    "npm:@juicesharp/rpiv-todo",
+    "npm:@juicesharp/rpiv-ask-user-question",
+    {
+      "source": "npm:pi-powerline-footer",
+      "extensions": ["+index.ts"]
+    },
+    "npm:@narumitw/pi-plan-mode",
+    "npm:@narumitw/pi-usage",
+    "npm:pi-web-access",
+    "npm:@ff-labs/pi-fff",
+    "npm:@erichll/pi-auto-review@0.24.0",
+    "npm:@gotgenes/pi-permission-system",
+    {
+      "source": "npm:pi-themes",
+      "extensions": []
+    },
+    "npm:pi-mcp-adapter",
+    "git:github.com/nicobailon/visual-explainer",
+    "npm:pi-subagents"
+  ],
+  "powerline": {
+    "preset": "default",
+    "cost": {
+      "currency": "USD",
+      "subscriptionDisplay": "both"
+    }
+  },
+  "extensions": ["-builtin:mcp"],
+  "enabledModels": [
+    "openai-codex/gpt-6-astra",
+    "openai-codex/gpt-6-luna",
+    "openai-codex/gpt-6.1-sol"
+  ]
+}

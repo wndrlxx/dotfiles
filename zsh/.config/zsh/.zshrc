@@ -34,6 +34,9 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     complete -o nospace -C "$(brew --prefix)/bin/terraform" terraform
 fi
 
+# pi coding-agent config
+export PI_CODING_AGENT_DIR="$HOME/.config/pi"
+
 # initialize mise before fzf
 eval "$(~/.local/bin/mise activate zsh)"
 
