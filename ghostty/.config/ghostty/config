@@ -6,7 +6,10 @@
 config-file = ?macos.conf
 config-file = ?linux.conf
 
-font-size = 15
+# Disable the default shortcut for opening this config file
+keybind = super+,=unbind
+
+font-size = 13
 theme = dark:TokyoNight, light:Rose Pine Dawn
 
 # Transparency
@@ -32,4 +35,3 @@ keybind = super+shift+j=resize_split:down,40
 keybind = super+shift+k=resize_split:up,40
 keybind = super+shift+l=resize_split:right,40
 keybind = super+shift+equal=equalize_splits
-
