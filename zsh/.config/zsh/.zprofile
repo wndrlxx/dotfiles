@@ -1,5 +1,12 @@
+# Use ~/.config as the base directory for XDG-compatible app configuration
+export XDG_CONFIG_HOME="$HOME/.config"
+
 # Homebrew
 export PATH="/opt/homebrew/bin:$PATH"
+
+# Go
+# [ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
+export PATH=$PATH:$HOME/go/bin
 
 # Java
 export JAVA_HOME="/opt/homebrew/opt/openjdk/"

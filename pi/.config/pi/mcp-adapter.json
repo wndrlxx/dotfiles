@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "notion": {
+      "disabled": true
+    },
+    "paper": {
+      "disabled": true,
+      "type": "stdio",
+      "command": "/Users/alm2/.paper/bin/paper",
+      "args": ["mcp"]
+    }
+  }
+}

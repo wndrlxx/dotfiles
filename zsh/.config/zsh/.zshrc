@@ -1,4 +1,10 @@
-eval "$("$(brew --prefix)/bin/brew" shellenv)"
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    eval "$("$(brew --prefix)/bin/brew" shellenv)"
+fi
+
+if [[ "$OSTYPE" == "linux"* ]]; then
+    export PATH="$HOME/.local/bin:$PATH"
+fi
 
 # remove duplicate PATH entries
 typeset -U PATH path
@@ -24,7 +30,15 @@ else
     compinit -C -d "$ZSH_COMPDUMP"
 fi
 autoload -U +X bashcompinit && bashcompinit
-complete -o nospace -C "$(brew --prefix)/bin/terraform" terraform
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    complete -o nospace -C "$(brew --prefix)/bin/terraform" terraform
+fi
+
+# pi coding-agent config
+export PI_CODING_AGENT_DIR="$HOME/.config/pi"
+
+# initialize mise before fzf
+eval "$(~/.local/bin/mise activate zsh)"
 
 # fzf config
 source <(fzf --zsh)
@@ -41,8 +55,19 @@ export FZF_CTRL_T_OPTS=" \
   --preview 'fzf-preview.sh {}' \
   --bind 'ctrl-/:change-preview-window(down|hidden|)'"
 export FORGIT_FZF_DEFAULT_OPTS="--preview-window=right:75%"
+
 # Git/delta theme — switch based on OS light/dark mode
-if [[ "$(defaults read -g AppleInterfaceStyle 2>/dev/null)" == "Dark" ]]; then
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    INTERFACE_STYLE=$(
+        defaults read -g AppleInterfaceStyle &>/dev/null && echo "Dark" || echo "Light"
+    )
+else
+    INTERFACE_STYLE=$(
+        [[ $(gsettings get org.gnome.desktop.interface color-scheme) == *dark* ]] \
+        && echo "Dark" || echo "Light"
+    )
+fi
+if [[ "$INTERFACE_STYLE" == "Dark" ]]; then
     export BAT_THEME="tokyonight_night"
     export DELTA_FEATURES="dark-mode"
     export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
@@ -71,6 +96,16 @@ diff() {
   command diff -u "$@" | delta --side-by-side --line-numbers
 }
 
+# lazygit wrapper to switch themes based on OS light/dark mode
+function lg() {
+  if [[ "$INTERFACE_STYLE" == "Dark" ]]; then
+    local theme="$HOME/.config/lazygit/tokyo-night.yml"
+  else
+    local theme="$HOME/.config/lazygit/rose-pine-dawn.yml"
+  fi
+  lazygit --use-config-file="$HOME/.config/lazygit/config.yml,$theme" "$@"
+}
+
 # Suffix aliases
 alias -s go="$EDITOR"
 alias -s js="$EDITOR"
@@ -90,13 +125,31 @@ alias rm="rm -iv"
 
 # Git aliases
 alias g='git'
+alias ga='git add'
+alias gaa='git add --all'
+alias gb='git branch'
+alias gba='git branch --all'
+alias gbd='git branch --delete'
+alias gbr='git branch --remote'
 alias gst='git status'
 alias gl='git pull'
 alias gp='git push'
+alias gpf='git push --force-with-lease --force-if-includes'
 alias gco='git checkout'
 alias gcb='git checkout -b'
-alias gaa='git add --all'
+alias gcp='git cherry-pick'
+alias gcpa='git cherry-pick --abort'
+alias gcpc='git cherry-pick --continue'
 alias gcm='git commit -m'
+alias gd='git diff'
+alias gds='git diff --staged'
+alias gf='git fetch'
+alias glog='git log --oneline --decorate --graph'
+alias gwt='git worktree'
+alias gwta='git worktree add'
+alias gwtl='git worktree list'
+alias gwtmv='git worktree move'
+alias gwtrm='git worktree remove'
 
 # Ruby/Rails aliases
 alias be="bundle exec"
@@ -114,10 +167,11 @@ alias sz="source ~/.config/zsh/.zshrc"
 alias ff="fastfetch"
 alias news="newsboat"
 alias y="yazi"
+alias h="herdr"
 
 # Editor aliases
-alias n="nvim"
-alias vi="nvim"
+alias n="nvim ."
+alias vi="nvim ."
 alias viv="nvim ~/.config/nvim"
 alias vin="nvim ~/.config/nvim"
 alias viz="nvim ~/.config/zsh/.zshrc"
@@ -128,18 +182,20 @@ alias vit="nvim ~/.config/tmux/tmux.conf"
 alias via="nvim ~/.config/aerospace/aerospace.toml"
 alias vis="nvim ~/.config/sketchybar/sketchybarrc"
 alias vig="nvim ~/.config/ghostty/config"
-alias lg="lazygit"
 
 # Project-specific aliases
 alias h2='$(npm prefix -s)/node_modules/.bin/shopify hydrogen'
 
 # Lazy load tools
-gcloud() {
-    unset -f gcloud
-    source "$(brew --prefix)/share/google-cloud-sdk/path.zsh.inc"
-    source "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc"
-    gcloud "$@"
-}
+if [[ "$OSTYPE" == "darwin"* ]]; then
+	gcloud() {
+	    unset -f gcloud
+	    source "$(brew --prefix)/share/google-cloud-sdk/path.zsh.inc"
+	    source "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc"
+	    gcloud "$@"
+	}
+fi
+
 fuck() {
     unset -f fuck fk
     eval "$(thefuck --alias)"
@@ -154,13 +210,16 @@ pyenv() {
 }
 
 # Antidote zsh plugin manager config
-source $(brew --prefix)/opt/antidote/share/antidote/antidote.zsh
+if [[ "$OSTYPE" == "darwin"* ]]; then
+	source $(brew --prefix)/opt/antidote/share/antidote/antidote.zsh
+else
+  source "$HOME/.antidote/antidote.zsh"
+fi
 antidote load ~/.config/zsh/.zsh_plugins.txt ~/.config/zsh/.zsh_plugins.zsh
 
 # Initialize tools
-. "$HOME/.atuin/bin/env"
+source "$HOME/.atuin/bin/env"
 eval "$(atuin init zsh)"
-eval "$(fnm env --use-on-cd)"
 eval "$(rbenv init - zsh)"
 eval "$(zoxide init zsh --cmd cd)"
 

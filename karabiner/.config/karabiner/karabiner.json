@@ -5,13 +5,13 @@
             "complex_modifications": {
                 "rules": [
                     {
-                        "description": "Option + Command + K → Open Karabiner-Elements",
+                        "description": "Command + K → Karabiner-Elements",
                         "manipulators": [
                             {
                                 "from": {
                                     "key_code": "k",
                                     "modifiers": {
-                                        "mandatory": ["option", "command"],
+                                        "mandatory": ["command"],
                                         "optional": ["any"]
                                     }
                                 },
@@ -21,109 +21,45 @@
                         ]
                     },
                     {
-                        "description": "Option + Command + S → Open Claude",
+                        "description": "Command + Escape → Open System Settings",
                         "manipulators": [
                             {
                                 "from": {
-                                    "key_code": "s",
+                                    "key_code": "escape",
                                     "modifiers": {
-                                        "mandatory": ["option", "command"],
+                                        "mandatory": ["command"],
                                         "optional": ["any"]
                                     }
                                 },
-                                "to": [{ "shell_command": "open -a Claude" }],
+                                "to": [{ "shell_command": "open -a 'System Settings'" }],
                                 "type": "basic"
                             }
                         ]
                     },
                     {
-                        "description": "Option + Command + E → Open Ellie",
+                        "description": "Command + Shift + Return → Open Browser (Chrome)",
                         "manipulators": [
                             {
                                 "from": {
-                                    "key_code": "e",
+                                    "key_code": "return_or_enter",
                                     "modifiers": {
-                                        "mandatory": ["option", "command"],
+                                        "mandatory": ["shift", "command"],
                                         "optional": ["any"]
                                     }
                                 },
-                                "to": [{ "shell_command": "open -a Ellie" }],
+                                "to": [{ "shell_command": "open -a 'Google Chrome'" }],
                                 "type": "basic"
                             }
                         ]
                     },
                     {
-                        "description": "Option + Command + B → Open Bitwarden",
+                        "description": "Command + Return → Open Terminal (Ghostty)",
                         "manipulators": [
                             {
                                 "from": {
-                                    "key_code": "b",
+                                    "key_code": "return_or_enter",
                                     "modifiers": {
-                                        "mandatory": ["option", "command"],
-                                        "optional": ["any"]
-                                    }
-                                },
-                                "to": [{ "shell_command": "open -a Bitwarden" }],
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
-                        "description": "Option + Command + V → Open ProtonVPN",
-                        "manipulators": [
-                            {
-                                "from": {
-                                    "key_code": "v",
-                                    "modifiers": {
-                                        "mandatory": ["option", "command"],
-                                        "optional": ["any"]
-                                    }
-                                },
-                                "to": [{ "shell_command": "open -a ProtonVPN" }],
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
-                        "description": "Option + Command + W → Open WhatsApp",
-                        "manipulators": [
-                            {
-                                "from": {
-                                    "key_code": "w",
-                                    "modifiers": {
-                                        "mandatory": ["option", "command"],
-                                        "optional": ["any"]
-                                    }
-                                },
-                                "to": [{ "shell_command": "open -a WhatsApp" }],
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
-                        "description": "Option + Command + R → Open Reminder",
-                        "manipulators": [
-                            {
-                                "from": {
-                                    "key_code": "r",
-                                    "modifiers": {
-                                        "mandatory": ["option", "command"],
-                                        "optional": ["any"]
-                                    }
-                                },
-                                "to": [{ "shell_command": "open -a Reminders" }],
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
-                        "description": "Option + Command + G → Open Ghostty",
-                        "manipulators": [
-                            {
-                                "from": {
-                                    "key_code": "g",
-                                    "modifiers": {
-                                        "mandatory": ["option", "command"],
+                                        "mandatory": ["command"],
                                         "optional": ["any"]
                                     }
                                 },
@@ -133,29 +69,77 @@
                         ]
                     },
                     {
-                        "description": "Option + Command + N → Open Notion",
+                        "description": "SUPER SHIFT + C → Claude",
                         "manipulators": [
                             {
                                 "from": {
-                                    "key_code": "n",
+                                    "key_code": "c",
                                     "modifiers": {
-                                        "mandatory": ["option", "command"],
+                                        "mandatory": ["shift", "command"],
                                         "optional": ["any"]
                                     }
                                 },
-                                "to": [{ "shell_command": "open -a Notion" }],
+                                "to": [{ "shell_command": "open -a Claude" }],
                                 "type": "basic"
                             }
                         ]
                     },
                     {
-                        "description": "Option + Command + M → Open Messages",
+                        "description": "SUPER SHIFT + E → Open Ellie",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "e",
+                                    "modifiers": {
+                                        "mandatory": ["shift", "command"],
+                                        "optional": ["any"]
+                                    }
+                                },
+                                "to": [{ "shell_command": "open -a Ellie" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "SUPER SHIFT + F → Finder",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "f",
+                                    "modifiers": {
+                                        "mandatory": ["command", "shift"],
+                                        "optional": ["any"]
+                                    }
+                                },
+                                "to": [{ "shell_command": "open -a Finder" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "SUPER SHIFT + G → Open ChatGPT",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "g",
+                                    "modifiers": {
+                                        "mandatory": ["shift", "command"],
+                                        "optional": ["any"]
+                                    }
+                                },
+                                "to": [{ "shell_command": "open -a ChatGPT" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "SUPER SHIFT + M → Open Messages",
                         "manipulators": [
                             {
                                 "from": {
                                     "key_code": "m",
                                     "modifiers": {
-                                        "mandatory": ["option", "command"],
+                                        "mandatory": ["shift", "command"],
                                         "optional": ["any"]
                                     }
                                 },
@@ -165,833 +149,65 @@
                         ]
                     },
                     {
-                        "description": "Option + Command + D → Open ChatGPT",
+                        "description": "SUPER SHIFT + N → Open Notion",
                         "manipulators": [
                             {
                                 "from": {
-                                    "key_code": "d",
+                                    "key_code": "n",
                                     "modifiers": {
-                                        "mandatory": ["option", "command"],
+                                        "mandatory": ["shift", "command"],
                                         "optional": ["any"]
                                     }
                                 },
-                                "to": [{ "software_function": { "open_application": { "bundle_identifier": "com.openai.chat" } } }],
+                                "to": [{ "shell_command": "open -a Notion" }],
                                 "type": "basic"
                             }
                         ]
                     },
                     {
-                        "description": "Option + Command + C → Open Helium Browser",
+                        "description": "SUPER SHIFT + R → Open Reminder",
                         "manipulators": [
                             {
                                 "from": {
-                                    "key_code": "c",
+                                    "key_code": "r",
                                     "modifiers": {
-                                        "mandatory": ["option", "command"],
+                                        "mandatory": ["shift", "command"],
                                         "optional": ["any"]
                                     }
                                 },
-                                "to": [{ "shell_command": "open -a Helium" }],
+                                "to": [{ "shell_command": "open -a Reminders" }],
                                 "type": "basic"
                             }
                         ]
                     },
                     {
-                        "description": "Home row mods - ctrl, opt, cmd, shift",
-                        "enabled": false,
+                        "description": "SUPER SHIFT + V → Open ProtonVPN",
                         "manipulators": [
                             {
                                 "from": {
-                                    "simultaneous": [
-                                        { "key_code": "a" },
-                                        { "key_code": "s" },
-                                        { "key_code": "d" },
-                                        { "key_code": "f" }
-                                    ]
+                                    "key_code": "v",
+                                    "modifiers": {
+                                        "mandatory": ["shift", "command"],
+                                        "optional": ["any"]
+                                    }
                                 },
-                                "to_if_held_down": [
-                                    {
-                                        "key_code": "left_shift",
-                                        "modifiers": ["left_command", "left_option", "left_control"]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "simultaneous": [
-                                        { "key_code": "a" },
-                                        { "key_code": "s" },
-                                        { "key_code": "d" }
-                                    ]
-                                },
-                                "to_if_held_down": [
-                                    {
-                                        "key_code": "left_control",
-                                        "modifiers": ["left_command", "left_option"]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "simultaneous": [
-                                        { "key_code": "a" },
-                                        { "key_code": "d" },
-                                        { "key_code": "f" }
-                                    ]
-                                },
-                                "to_if_held_down": [
-                                    {
-                                        "key_code": "left_shift",
-                                        "modifiers": ["left_command", "left_control"]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "simultaneous": [
-                                        { "key_code": "s" },
-                                        { "key_code": "d" },
-                                        { "key_code": "f" }
-                                    ]
-                                },
-                                "to_if_held_down": [
-                                    {
-                                        "key_code": "left_option",
-                                        "modifiers": ["left_command", "left_shift"]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "simultaneous": [
-                                        { "key_code": "a" },
-                                        { "key_code": "s" }
-                                    ],
-                                    "simultaneous_options": { "key_down_order": "strict" }
-                                },
-                                "to_if_alone": [
-                                    { "key_code": "a" },
-                                    { "key_code": "s" }
-                                ],
-                                "to_if_held_down": [
-                                    {
-                                        "key_code": "left_control",
-                                        "modifiers": ["left_option"]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "simultaneous": [
-                                        { "key_code": "s" },
-                                        { "key_code": "a" }
-                                    ],
-                                    "simultaneous_options": { "key_down_order": "strict" }
-                                },
-                                "to_if_alone": [
-                                    { "key_code": "s" },
-                                    { "key_code": "a" }
-                                ],
-                                "to_if_held_down": [
-                                    {
-                                        "key_code": "left_control",
-                                        "modifiers": ["left_option"]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "simultaneous": [
-                                        { "key_code": "a" },
-                                        { "key_code": "d" }
-                                    ],
-                                    "simultaneous_options": { "key_down_order": "strict" }
-                                },
-                                "to_if_alone": [
-                                    { "key_code": "a" },
-                                    { "key_code": "d" }
-                                ],
-                                "to_if_held_down": [
-                                    {
-                                        "key_code": "left_control",
-                                        "modifiers": ["left_command"]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "simultaneous": [
-                                        { "key_code": "d" },
-                                        { "key_code": "a" }
-                                    ],
-                                    "simultaneous_options": { "key_down_order": "strict" }
-                                },
-                                "to_if_alone": [
-                                    { "key_code": "d" },
-                                    { "key_code": "a" }
-                                ],
-                                "to_if_held_down": [
-                                    {
-                                        "key_code": "left_control",
-                                        "modifiers": ["left_command"]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "simultaneous": [
-                                        { "key_code": "a" },
-                                        { "key_code": "f" }
-                                    ],
-                                    "simultaneous_options": { "key_down_order": "strict" }
-                                },
-                                "to_if_alone": [
-                                    { "key_code": "a" },
-                                    { "key_code": "f" }
-                                ],
-                                "to_if_held_down": [
-                                    {
-                                        "key_code": "left_control",
-                                        "modifiers": ["left_shift"]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "simultaneous": [
-                                        { "key_code": "f" },
-                                        { "key_code": "a" }
-                                    ],
-                                    "simultaneous_options": { "key_down_order": "strict" }
-                                },
-                                "to_if_alone": [
-                                    { "key_code": "f" },
-                                    { "key_code": "a" }
-                                ],
-                                "to_if_held_down": [
-                                    {
-                                        "key_code": "left_control",
-                                        "modifiers": ["left_shift"]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "simultaneous": [
-                                        { "key_code": "s" },
-                                        { "key_code": "d" }
-                                    ],
-                                    "simultaneous_options": { "key_down_order": "strict" }
-                                },
-                                "to_if_alone": [
-                                    { "key_code": "s" },
-                                    { "key_code": "d" }
-                                ],
-                                "to_if_held_down": [
-                                    {
-                                        "key_code": "left_option",
-                                        "modifiers": ["left_command"]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "simultaneous": [
-                                        { "key_code": "d" },
-                                        { "key_code": "s" }
-                                    ],
-                                    "simultaneous_options": { "key_down_order": "strict" }
-                                },
-                                "to_if_alone": [
-                                    { "key_code": "d" },
-                                    { "key_code": "s" }
-                                ],
-                                "to_if_held_down": [
-                                    {
-                                        "key_code": "left_option",
-                                        "modifiers": ["left_command"]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "simultaneous": [
-                                        { "key_code": "s" },
-                                        { "key_code": "f" }
-                                    ],
-                                    "simultaneous_options": { "key_down_order": "strict" }
-                                },
-                                "to_if_alone": [
-                                    { "key_code": "s" },
-                                    { "key_code": "f" }
-                                ],
-                                "to_if_held_down": [
-                                    {
-                                        "key_code": "left_option",
-                                        "modifiers": ["left_shift"]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "simultaneous": [
-                                        { "key_code": "f" },
-                                        { "key_code": "s" }
-                                    ],
-                                    "simultaneous_options": { "key_down_order": "strict" }
-                                },
-                                "to_if_alone": [
-                                    { "key_code": "f" },
-                                    { "key_code": "s" }
-                                ],
-                                "to_if_held_down": [
-                                    {
-                                        "key_code": "left_option",
-                                        "modifiers": ["left_shift"]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "simultaneous": [
-                                        { "key_code": "d" },
-                                        { "key_code": "f" }
-                                    ],
-                                    "simultaneous_options": { "key_down_order": "strict" }
-                                },
-                                "to_if_alone": [
-                                    { "key_code": "d" },
-                                    { "key_code": "f" }
-                                ],
-                                "to_if_held_down": [
-                                    {
-                                        "key_code": "left_command",
-                                        "modifiers": ["left_shift"]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "simultaneous": [
-                                        { "key_code": "f" },
-                                        { "key_code": "d" }
-                                    ],
-                                    "simultaneous_options": { "key_down_order": "strict" }
-                                },
-                                "to_if_alone": [
-                                    { "key_code": "f" },
-                                    { "key_code": "d" }
-                                ],
-                                "to_if_held_down": [
-                                    {
-                                        "key_code": "left_command",
-                                        "modifiers": ["left_shift"]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": { "key_code": "a" },
-                                "to_delayed_action": {
-                                    "to_if_canceled": [{ "key_code": "a" }],
-                                    "to_if_invoked": [{ "key_code": "vk_none" }]
-                                },
-                                "to_if_alone": [
-                                    {
-                                        "halt": true,
-                                        "key_code": "a"
-                                    }
-                                ],
-                                "to_if_held_down": [
-                                    {
-                                        "halt": true,
-                                        "key_code": "left_control"
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": { "key_code": "s" },
-                                "to_delayed_action": {
-                                    "to_if_canceled": [{ "key_code": "s" }],
-                                    "to_if_invoked": [{ "key_code": "vk_none" }]
-                                },
-                                "to_if_alone": [
-                                    {
-                                        "halt": true,
-                                        "key_code": "s"
-                                    }
-                                ],
-                                "to_if_held_down": [
-                                    {
-                                        "halt": true,
-                                        "key_code": "left_option"
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": { "key_code": "d" },
-                                "to_delayed_action": {
-                                    "to_if_canceled": [{ "key_code": "d" }],
-                                    "to_if_invoked": [{ "key_code": "vk_none" }]
-                                },
-                                "to_if_alone": [
-                                    {
-                                        "halt": true,
-                                        "key_code": "d"
-                                    }
-                                ],
-                                "to_if_held_down": [
-                                    {
-                                        "halt": true,
-                                        "key_code": "left_command"
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": { "key_code": "f" },
-                                "to_delayed_action": {
-                                    "to_if_canceled": [
-                                        {
-                                            "halt": true,
-                                            "key_code": "f"
-                                        }
-                                    ],
-                                    "to_if_invoked": [{ "key_code": "vk_none" }]
-                                },
-                                "to_if_alone": [
-                                    {
-                                        "halt": true,
-                                        "key_code": "f"
-                                    }
-                                ],
-                                "to_if_held_down": [
-                                    {
-                                        "halt": true,
-                                        "key_code": "left_shift"
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "simultaneous": [
-                                        { "key_code": "j" },
-                                        { "key_code": "k" },
-                                        { "key_code": "l" },
-                                        { "key_code": "semicolon" }
-                                    ]
-                                },
-                                "to_if_held_down": [
-                                    {
-                                        "key_code": "right_shift",
-                                        "modifiers": ["right_command", "right_option", "right_control"]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "simultaneous": [
-                                        { "key_code": "semicolon" },
-                                        { "key_code": "l" },
-                                        { "key_code": "k" }
-                                    ]
-                                },
-                                "to_if_held_down": [
-                                    {
-                                        "key_code": "right_shift",
-                                        "modifiers": ["right_option", "right_control"]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "simultaneous": [
-                                        { "key_code": "semicolon" },
-                                        { "key_code": "k" },
-                                        { "key_code": "j" }
-                                    ]
-                                },
-                                "to_if_held_down": [
-                                    {
-                                        "key_code": "right_shift",
-                                        "modifiers": ["right_command", "right_option"]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "simultaneous": [
-                                        { "key_code": "l" },
-                                        { "key_code": "k" },
-                                        { "key_code": "j" }
-                                    ]
-                                },
-                                "to_if_held_down": [
-                                    {
-                                        "key_code": "right_control",
-                                        "modifiers": ["right_command", "right_option"]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "simultaneous": [
-                                        { "key_code": "semicolon" },
-                                        { "key_code": "l" }
-                                    ],
-                                    "simultaneous_options": { "key_down_order": "strict" }
-                                },
-                                "to_if_alone": [
-                                    { "key_code": "semicolon" },
-                                    { "key_code": "l" }
-                                ],
-                                "to_if_held_down": [
-                                    {
-                                        "key_code": "right_control",
-                                        "modifiers": ["right_option"]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "simultaneous": [
-                                        { "key_code": "l" },
-                                        { "key_code": "semicolon" }
-                                    ],
-                                    "simultaneous_options": { "key_down_order": "strict" }
-                                },
-                                "to_if_alone": [
-                                    { "key_code": "l" },
-                                    { "key_code": "semicolon" }
-                                ],
-                                "to_if_held_down": [
-                                    {
-                                        "key_code": "right_control",
-                                        "modifiers": ["right_option"]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "simultaneous": [
-                                        { "key_code": "semicolon" },
-                                        { "key_code": "k" }
-                                    ],
-                                    "simultaneous_options": { "key_down_order": "strict" }
-                                },
-                                "to_if_alone": [
-                                    { "key_code": "semicolon" },
-                                    { "key_code": "k" }
-                                ],
-                                "to_if_held_down": [
-                                    {
-                                        "key_code": "right_control",
-                                        "modifiers": ["right_command"]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "simultaneous": [
-                                        { "key_code": "k" },
-                                        { "key_code": "semicolon" }
-                                    ],
-                                    "simultaneous_options": { "key_down_order": "strict" }
-                                },
-                                "to_if_alone": [
-                                    { "key_code": "k" },
-                                    { "key_code": "semicolon" }
-                                ],
-                                "to_if_held_down": [
-                                    {
-                                        "key_code": "right_control",
-                                        "modifiers": ["right_command"]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "simultaneous": [
-                                        { "key_code": "semicolon" },
-                                        { "key_code": "j" }
-                                    ],
-                                    "simultaneous_options": { "key_down_order": "strict" }
-                                },
-                                "to_if_alone": [
-                                    { "key_code": "semicolon" },
-                                    { "key_code": "j" }
-                                ],
-                                "to_if_held_down": [
-                                    {
-                                        "key_code": "right_control",
-                                        "modifiers": ["right_shift"]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "simultaneous": [
-                                        { "key_code": "j" },
-                                        { "key_code": "semicolon" }
-                                    ],
-                                    "simultaneous_options": { "key_down_order": "strict" }
-                                },
-                                "to_if_alone": [
-                                    { "key_code": "j" },
-                                    { "key_code": "semicolon" }
-                                ],
-                                "to_if_held_down": [
-                                    {
-                                        "key_code": "right_control",
-                                        "modifiers": ["right_shift"]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "simultaneous": [
-                                        { "key_code": "l" },
-                                        { "key_code": "k" }
-                                    ],
-                                    "simultaneous_options": { "key_down_order": "strict" }
-                                },
-                                "to_if_alone": [
-                                    { "key_code": "l" },
-                                    { "key_code": "k" }
-                                ],
-                                "to_if_held_down": [
-                                    {
-                                        "key_code": "right_option",
-                                        "modifiers": ["right_command"]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "simultaneous": [
-                                        { "key_code": "k" },
-                                        { "key_code": "l" }
-                                    ],
-                                    "simultaneous_options": { "key_down_order": "strict" }
-                                },
-                                "to_if_alone": [
-                                    { "key_code": "k" },
-                                    { "key_code": "l" }
-                                ],
-                                "to_if_held_down": [
-                                    {
-                                        "key_code": "right_option",
-                                        "modifiers": ["right_command"]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "simultaneous": [
-                                        { "key_code": "l" },
-                                        { "key_code": "j" }
-                                    ],
-                                    "simultaneous_options": { "key_down_order": "strict" }
-                                },
-                                "to_if_alone": [
-                                    { "key_code": "l" },
-                                    { "key_code": "j" }
-                                ],
-                                "to_if_held_down": [
-                                    {
-                                        "key_code": "right_option",
-                                        "modifiers": ["right_shift"]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "simultaneous": [
-                                        { "key_code": "j" },
-                                        { "key_code": "l" }
-                                    ],
-                                    "simultaneous_options": { "key_down_order": "strict" }
-                                },
-                                "to_if_alone": [
-                                    { "key_code": "j" },
-                                    { "key_code": "l" }
-                                ],
-                                "to_if_held_down": [
-                                    {
-                                        "key_code": "right_option",
-                                        "modifiers": ["right_shift"]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "simultaneous": [
-                                        { "key_code": "k" },
-                                        { "key_code": "j" }
-                                    ],
-                                    "simultaneous_options": { "key_down_order": "strict" }
-                                },
-                                "to_if_alone": [
-                                    { "key_code": "k" },
-                                    { "key_code": "j" }
-                                ],
-                                "to_if_held_down": [
-                                    {
-                                        "key_code": "right_command",
-                                        "modifiers": ["right_shift"]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "simultaneous": [
-                                        { "key_code": "j" },
-                                        { "key_code": "k" }
-                                    ],
-                                    "simultaneous_options": { "key_down_order": "strict" }
-                                },
-                                "to_if_alone": [
-                                    { "key_code": "j" },
-                                    { "key_code": "k" }
-                                ],
-                                "to_if_held_down": [
-                                    {
-                                        "key_code": "right_command",
-                                        "modifiers": ["right_shift"]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": { "key_code": "semicolon" },
-                                "to_delayed_action": {
-                                    "to_if_canceled": [{ "key_code": "semicolon" }],
-                                    "to_if_invoked": [{ "key_code": "vk_none" }]
-                                },
-                                "to_if_alone": [
-                                    {
-                                        "halt": true,
-                                        "key_code": "semicolon"
-                                    }
-                                ],
-                                "to_if_held_down": [
-                                    {
-                                        "halt": true,
-                                        "key_code": "right_control"
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": { "key_code": "l" },
-                                "to_delayed_action": {
-                                    "to_if_canceled": [{ "key_code": "l" }],
-                                    "to_if_invoked": [{ "key_code": "vk_none" }]
-                                },
-                                "to_if_alone": [
-                                    {
-                                        "halt": true,
-                                        "key_code": "l"
-                                    }
-                                ],
-                                "to_if_held_down": [
-                                    {
-                                        "halt": true,
-                                        "key_code": "right_option"
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": { "key_code": "k" },
-                                "to_delayed_action": {
-                                    "to_if_canceled": [{ "key_code": "k" }],
-                                    "to_if_invoked": [{ "key_code": "vk_none" }]
-                                },
-                                "to_if_alone": [
-                                    {
-                                        "halt": true,
-                                        "key_code": "k"
-                                    }
-                                ],
-                                "to_if_held_down": [
-                                    {
-                                        "halt": true,
-                                        "key_code": "right_command"
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": { "key_code": "j" },
-                                "to_delayed_action": {
-                                    "to_if_canceled": [{ "key_code": "j" }],
-                                    "to_if_invoked": [{ "key_code": "vk_none" }]
-                                },
-                                "to_if_alone": [
-                                    {
-                                        "halt": true,
-                                        "key_code": "j"
-                                    }
-                                ],
-                                "to_if_held_down": [
-                                    {
-                                        "halt": true,
-                                        "key_code": "right_shift"
-                                    }
-                                ],
+                                "to": [{ "shell_command": "open -a ProtonVPN" }],
                                 "type": "basic"
                             }
                         ]
                     },
                     {
-                        "enabled": false,
+                        "description": "SUPER SHIFT + W → Open WhatsApp",
                         "manipulators": [
                             {
-                                "description": "Change caps_lock to control+option+shift.",
                                 "from": {
-                                    "key_code": "caps_lock",
-                                    "modifiers": { "optional": ["any"] }
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "left_shift",
-                                        "modifiers": ["left_shift", "left_control", "left_option"]
+                                    "key_code": "w",
+                                    "modifiers": {
+                                        "mandatory": ["shift", "command"],
+                                        "optional": ["any"]
                                     }
-                                ],
+                                },
+                                "to": [{ "shell_command": "open -a WhatsApp" }],
                                 "type": "basic"
                             }
                         ]
