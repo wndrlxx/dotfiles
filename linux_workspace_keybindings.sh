@@ -1,3 +1,6 @@
+#!/bin/bash
+set -euo pipefail
+
 # setup 6 workspaces + keybindings
 gsettings set org.gnome.mutter dynamic-workspaces false
 gsettings set org.gnome.desktop.wm.preferences num-workspaces 6

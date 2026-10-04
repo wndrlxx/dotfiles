@@ -1,35 +1,33 @@
 #!/bin/bash
+set -euo pipefail
 
-# clone dotfiles
-mkdir -p ~/git/dotfiles/
-cd "$HOME/git/dotfiles" || {
-  echo "Directory $HOME/git/dotfiles/ not found!"
-  exit 1
-}
-git clone https://github.com/wndrlxx/dotfiles.git || {
-  echo "Failed to clone dotfiles!"
-  exit 1
-}
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+cd "$SCRIPT_DIR"
 
 # run GNU Stow
 if [[ "$OSTYPE" == "darwin"* ]]; then
-  stow -t ~ aerospace
-  stow -t ~ karabiner
-  stow -t ~ sketchybar
+  stow --ignore='\.DS_Store$' -t ~ aerospace
+  stow --ignore='\.DS_Store$' -t ~ karabiner
+  stow --ignore='\.DS_Store$' -t ~ sketchybar
+  ghostty_ignore='linux\.conf$'
 else
-  stow -t ~ run-or-raise
+  stow --ignore='\.DS_Store$' -t ~ run-or-raise
+  ghostty_ignore='macos\.conf$'
 fi
 
-stow -t ~ bat
-stow -t ~ btop
-stow -t ~ gh
-stow -t ~ git
-stow -t ~ ghostty
-stow -t ~ herdr
-stow -t ~ lazygit
-stow -t ~ nvim
-stow -t ~ pi
-stow -t ~ starship
-stow -t ~ zsh
+# Unstow without platform exclusions to remove legacy folded and cross-platform links.
+stow --delete --ignore='\.DS_Store$' -t "$HOME" ghostty
+stow --ignore='\.DS_Store$' -t "$HOME" --no-folding --ignore="$ghostty_ignore" ghostty
 
-source "$HOME/.config/zsh/.zshrc"
+stow --ignore='\.DS_Store$' -t ~ bat
+stow --ignore='\.DS_Store$' -t ~ btop
+stow --ignore='\.DS_Store$' -t ~ gh
+stow --ignore='\.DS_Store$' -t ~ git
+stow --ignore='\.DS_Store$' -t ~ herdr
+stow --ignore='\.DS_Store$' -t ~ lazygit
+stow --ignore='\.DS_Store$' -t ~ nvim
+stow --ignore='\.DS_Store$' -t ~ pi
+stow --ignore='\.DS_Store$' -t ~ starship
+stow --ignore='\.DS_Store$' -t ~ zsh
+
+echo "Dotfiles installed. Start a new Zsh session to load the shell configuration."

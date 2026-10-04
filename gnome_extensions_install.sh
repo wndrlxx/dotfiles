@@ -1,8 +1,10 @@
 #!/bin/bash
+set -euo pipefail
 
 # gnome-extensions
 pipx install gnome-extensions-cli --system-site-packages
 gext install run-or-raise@edvard.cz
+gext install just-perfection-desktop@just-perfection
 gnome-extensions enable just-perfection-desktop@just-perfection
 gext install instantworkspaceswitcher@amalantony.net
 # removes animation when switching workspaces

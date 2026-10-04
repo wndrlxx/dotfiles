@@ -1,5 +1,9 @@
+#!/bin/bash
+set -euo pipefail
+
 # NOTE: mise replaces fnm, nvm, pyenv, and rbenv
-curl https://mise.run | sh
+curl -fsSL https://mise.run | sh
+export PATH="$HOME/.local/bin:$PATH"
 
 mise use -g atuin@latest \
   delta@latest \
