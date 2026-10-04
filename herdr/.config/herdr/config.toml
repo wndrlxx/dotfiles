@@ -23,7 +23,7 @@ toggle_sidebar = "prefix+p"
 description = "Lazygit"
 key = ["prefix+l"]
 type = "popup"
-command = "cd \"${HERDR_ACTIVE_PANE_CWD:-.}\" && exec /opt/homebrew/bin/lazygit"
+command = "cd \"${HERDR_ACTIVE_PANE_CWD:-.}\" && exec lazygit"
 width = "95%"
 height = "95%"
 
