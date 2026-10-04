@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "1.0.1",
+  "lastChangelogVersion": "1.0.2",
   "theme": "catppuccin-latte/tokyo-night",
   "defaultProvider": "openai-codex",
   "defaultModel": "gpt-6.1-sol",
@@ -10,7 +10,9 @@
     "npm:@juicesharp/rpiv-ask-user-question",
     {
       "source": "npm:pi-powerline-footer",
-      "extensions": ["+index.ts"]
+      "extensions": [
+        "+index.ts"
+      ]
     },
     "npm:@narumitw/pi-plan-mode",
     "npm:@narumitw/pi-usage",
@@ -33,7 +35,9 @@
       "subscriptionDisplay": "both"
     }
   },
-  "extensions": ["-builtin:mcp"],
+  "extensions": [
+    "-builtin:mcp"
+  ],
   "enabledModels": [
     "openai-codex/gpt-6-astra",
     "openai-codex/gpt-6-luna",
