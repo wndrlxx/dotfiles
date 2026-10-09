@@ -5,6 +5,8 @@ set -euo pipefail
 curl -fsSL https://mise.run | sh
 export PATH="$HOME/.local/bin:$PATH"
 
+mise settings add idiomatic_version_file_enable_tools ruby
+
 mise use -g atuin@latest \
   delta@latest \
   fastfetch@latest \

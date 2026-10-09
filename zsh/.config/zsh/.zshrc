@@ -220,7 +220,6 @@ antidote load ~/.config/zsh/.zsh_plugins.txt ~/.config/zsh/.zsh_plugins.zsh
 # Initialize tools
 # mise activation above makes Atuin available on PATH.
 eval "$(atuin init zsh)"
-eval "$(rbenv init - zsh)"
 eval "$(zoxide init zsh --cmd cd)"
 
 # Starship prompt — must be last
