@@ -16,6 +16,7 @@ brew install --cask superwhisper
 brew tap FelixKratz/formulae
 brew install sketchybar
 
+brew install antidote
 brew install bat
 brew install btop
 brew install eza
