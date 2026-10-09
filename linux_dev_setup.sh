@@ -6,6 +6,11 @@ export PATH="$HOME/.local/bin:$HOME/.local/share/mise/shims:$PATH"
 
 "$SCRIPT_DIR/apt_install.sh"
 
+# Match the Antidote location sourced by .zshrc, preserving existing installs.
+if [[ ! -f "$HOME/.antidote/antidote.zsh" ]]; then
+  git clone --depth=1 https://github.com/mattmc3/antidote.git "$HOME/.antidote"
+fi
+
 "$SCRIPT_DIR/mise_install.sh"
 
 "$SCRIPT_DIR/gnome_extensions_install.sh"
