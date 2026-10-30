@@ -30,18 +30,17 @@ sketchybar --default "${default[@]}"
 
 sketchybar --add event aerospace_workspace_change
 
-for sid in $(aerospace list-workspaces --all); do
-    sketchybar --add item space.$sid left \
-        --subscribe space.$sid aerospace_workspace_change \
-        --set space.$sid \
-        background.color=0x44ffffff \
-        background.corner_radius=6 \
+sketchybar --add item aerospace_workspace left \
+        --subscribe aerospace_workspace aerospace_workspace_change \
+        --set aerospace_workspace \
+        background.color=0x20ffffff \
+        background.corner_radius=10 \
         background.height=20 \
-        background.drawing=off \
-        label="$sid" \
-        click_script="aerospace workspace $sid" \
-        script="$CONFIG_DIR/plugins/aerospace.sh $sid"
-done
+        background.drawing=on \
+        icon.drawing=off \
+        label.padding_left=14 \
+        label.padding_right=14 \
+        script="$PLUGIN_DIR/aerospace.sh"
 
 sketchybar --add item front_app left \
            --set front_app icon.drawing=off script="$PLUGIN_DIR/front_app.sh" \
