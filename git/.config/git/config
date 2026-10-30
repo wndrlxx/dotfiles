@@ -21,3 +21,10 @@
   conflictstyle = diff3
 [diff]
   colorMoved = default
+
+# Pi writes machine-local state into settings.json; keep the dotfiles copy shareable.
+# Applied via this repo's .gitattributes. https://github.com/earendil-works/pi/issues/10187
+[filter "pi-settings"]
+  clean = "jq 'del(.deviceId, .lastChangelogVersion)'"
+  # Fail instead of committing unfiltered content if jq is missing.
+  required = true
