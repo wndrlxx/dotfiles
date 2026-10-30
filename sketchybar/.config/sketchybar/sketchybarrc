@@ -30,6 +30,7 @@ sketchybar --default "${default[@]}"
 
 sketchybar --add event aerospace_workspace_change
 
+# Active workspace indicator
 sketchybar --add item aerospace_workspace left \
         --subscribe aerospace_workspace aerospace_workspace_change \
         --set aerospace_workspace \
@@ -42,18 +43,34 @@ sketchybar --add item aerospace_workspace left \
         label.padding_right=14 \
         script="$PLUGIN_DIR/aerospace.sh"
 
+# Currently focused application
 sketchybar --add item front_app left \
            --set front_app icon.drawing=off script="$PLUGIN_DIR/front_app.sh" \
            --subscribe front_app front_app_switched
 
-sketchybar --add item clock right \
-           --set clock update_freq=10 script="$PLUGIN_DIR/clock.sh"
+# Date and time with MacBook notch
+sketchybar --add item date.notch q \
+           --set date.notch drawing=off update_freq=600 script="$PLUGIN_DIR/date.sh"
 
+sketchybar --add item clock.notch e \
+           --set clock.notch drawing=off update_freq=6 script="$PLUGIN_DIR/clock.sh"
+
+# Date and time, no notch
+sketchybar --add item date center \
+           --set date drawing=off update_freq=600 script="$PLUGIN_DIR/date.sh"
+
+sketchybar --add item clock center \
+           --set clock drawing=off update_freq=6 script="$PLUGIN_DIR/clock.sh"
+
+# Refresh display associations after monitor changes, including lid open/close.
+sketchybar --add item clock_layout left \
+           --set clock_layout drawing=off updates=on update_freq=10 \
+                 script="/bin/bash \"$PLUGIN_DIR/clock_layout.sh\"" \
+           --subscribe clock_layout display_change system_woke
+
+# Conditionally show CPU usage
 sketchybar --add item cpu right \
-           --set cpu update_freq=10 script="$CONFIG_DIR/plugins/cpu.sh"
-
-# sketchybar --add item date right \
-#            --set date update_freq=600 script="$PLUGIN_DIR/date.sh" \
+           --set cpu update_freq=6 script="$CONFIG_DIR/plugins/cpu.sh"
 
 ##### Force all scripts to run the first time (never do this in a script) #####
 sketchybar --update
