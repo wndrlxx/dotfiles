@@ -5,3 +5,4 @@
 .zsh_history
 .zcompcache
 */.config/karabiner/automatic_backups/
+nvim.log

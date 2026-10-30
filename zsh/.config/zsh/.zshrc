@@ -119,7 +119,7 @@ alias -s yaml="bat --language=yaml"
 # Make commands interactive
 alias cp="cp -iv"
 alias l="ls -larh"
-alias ls="eza -snew --icons --group-directories-first --color=always"
+alias ls="eza -snew --icons --group-directories-first --color=always --ignore-glob='.DS_Store'"
 alias mv="mv -iv"
 alias rm="rm -iv"
 
@@ -200,13 +200,6 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 	}
 fi
 
-fuck() {
-    unset -f fuck fk
-    eval "$(thefuck --alias)"
-    eval "$(thefuck --alias fk)"
-    fuck "$@"
-}
-fk() { fuck "$@"; }
 pyenv() {
     unset -f pyenv
     eval "$(pyenv init - zsh)"
@@ -222,7 +215,6 @@ fi
 antidote load ~/.config/zsh/.zsh_plugins.txt ~/.config/zsh/.zsh_plugins.zsh
 
 # Initialize tools
-# mise activation above makes Atuin available on PATH.
 eval "$(atuin init zsh)"
 eval "$(zoxide init zsh --cmd cd)"
 
