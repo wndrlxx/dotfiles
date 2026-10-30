@@ -168,6 +168,10 @@ alias ff="fastfetch"
 alias news="newsboat"
 alias y="yazi"
 alias h="herdr"
+alias c="codex resume"
+alias pu="pi update && pi update --extensions"
+alias hu="brew update && brew upgrade herdr && herdr status"
+alias hr="herdr server stop && herdr"
 
 # Editor aliases
 alias n="nvim ."

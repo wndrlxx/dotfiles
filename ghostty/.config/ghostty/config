@@ -9,7 +9,7 @@ config-file = ?linux.conf
 # Disable the default shortcut for opening this config file
 keybind = super+,=unbind
 
-font-size = 13
+font-size = 14
 theme = dark:TokyoNight, light:Rose Pine Dawn
 
 # Transparency
@@ -35,3 +35,7 @@ keybind = super+shift+j=resize_split:down,40
 keybind = super+shift+k=resize_split:up,40
 keybind = super+shift+l=resize_split:right,40
 keybind = super+shift+equal=equalize_splits
+
+# Send Ctrl+Tab and Ctrl+Shift+Tab in a format Herdr can recognize.
+keybind = ctrl+tab=csi:9;5u
+keybind = ctrl+shift+tab=csi:9;6u
