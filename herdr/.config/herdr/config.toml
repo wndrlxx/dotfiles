@@ -3,6 +3,8 @@ onboarding = false
 [keys]
 prefix = "ctrl+space"
 goto = "ctrl+f"
+previous_agent = "ctrl+shift+tab"
+next_agent = "ctrl+tab"
 previous_workspace = "ctrl+shift+k"
 next_workspace = "ctrl+shift+j"
 new_tab = "ctrl+t"
@@ -23,7 +25,8 @@ toggle_sidebar = "prefix+p"
 description = "Lazygit"
 key = ["prefix+l"]
 type = "popup"
-command = "cd \"${HERDR_ACTIVE_PANE_CWD:-.}\" && exec lazygit"
+# Popups inherit the server's PATH; load login-shell paths (including Homebrew).
+command = "/bin/zsh -lc 'cd \"${HERDR_ACTIVE_PANE_CWD:-.}\" && exec lazygit'"
 width = "95%"
 height = "95%"
 
