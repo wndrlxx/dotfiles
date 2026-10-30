@@ -14,7 +14,6 @@ sudo apt install bat \
   mitmproxy \
   sqlite3 \
   stow \
-  thefuck \
   wget \
   zoxide \
   zsh

@@ -8,5 +8,8 @@ if [[ "$OSTYPE" == "linux"* ]]; then
   export MANROFFOPT="-c"
 fi
 export ZDOTDIR="$HOME/.config/zsh"
+
+# Make Mise tools available before interactive hooks run (e.g. to Herdr plugins).
+export PATH="$HOME/.local/share/mise/shims:$PATH"
 export LANG=en_US.UTF-8
 export STARSHIP_CONFIG=~/.config/starship/starship.toml
