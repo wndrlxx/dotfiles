@@ -7,7 +7,7 @@ PLUGIN_DIR="$CONFIG_DIR/plugins"
 # If you are looking for other colors, see the color picker:
 # https://felixkratz.github.io/SketchyBar/config/tricks#color-picker
 
-sketchybar --bar position=top height=28 blur_radius=30 color=0x00000000
+sketchybar --bar position=top height=28 blur_radius=30 color=0x00000000 padding_right=16
 
 ##### Changing Defaults #####
 # We now change some default values, which are applied to all further items.
@@ -72,9 +72,32 @@ sketchybar --add item clock_layout left \
                  script="/bin/bash \"$PLUGIN_DIR/clock_layout.sh\"" \
            --subscribe clock_layout display_change system_woke
 
-# Conditionally show CPU usage
+# Codex remaining quota: five-hour bar above, weekly bar below.
+sketchybar --add item codex_logo right \
+           --set codex_logo width=14 padding_left=0 padding_right=0 \
+                 background.drawing=on background.image.drawing=on \
+                 background.image="$CONFIG_DIR/assets/codex.png" background.image.scale=0.39 \
+                 icon.drawing=off label.drawing=off
+
+sketchybar --add item codex_usage right \
+           --set codex_usage width=48 padding_left=0 padding_right=0 \
+                 background.drawing=on \
+                 icon.drawing=off label.drawing=off update_freq=300 \
+                 script="python3 \"$PLUGIN_DIR/codex_usage.py\"" \
+                 popup.align=right popup.height=16 popup.background.color=0xee20242b \
+                 popup.background.corner_radius=6 popup.background.border_width=1 \
+                 popup.background.border_color=0xff454b55 \
+           --subscribe codex_usage system_woke mouse.entered mouse.exited mouse.exited.global
+
+# Conditionally show CPU usage to the left of the Codex widget.
 sketchybar --add item cpu right \
            --set cpu update_freq=6 script="$CONFIG_DIR/plugins/cpu.sh"
+
+for detail in primary secondary status; do
+  sketchybar --add item "codex_usage.$detail" popup.codex_usage \
+             --set "codex_usage.$detail" icon.drawing=off label="Loading…" \
+                   label.padding_left=12 label.padding_right=12
+done
 
 ##### Force all scripts to run the first time (never do this in a script) #####
 sketchybar --update
