@@ -4,4 +4,9 @@
 # the item invoking this script:
 # https://felixkratz.github.io/SketchyBar/config/events#events-and-scripting
 
-sketchybar --set "$NAME" label="$(date +"%a")"
+case "$NAME" in
+  date.notch) FORMAT="%a" ;;
+  *) FORMAT="%A" ;;
+esac
+
+sketchybar --set "$NAME" label="$(/bin/date +"$FORMAT")"

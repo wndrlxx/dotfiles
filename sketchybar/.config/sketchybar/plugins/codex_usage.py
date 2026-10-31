@@ -84,18 +84,14 @@ def draw_bars(path, windows):
     pixels = bytearray(width * height * 4)
     for top, window in zip((4, 20), windows):
         value = remaining(window)
-        color = (109, 211, 144, 255)
-        if value is not None and value <= 10:
-            color = (245, 105, 105, 255)
-        elif value is not None and value <= 25:
-            color = (245, 198, 97, 255)
+        color = (220, 220, 220, 255)
         fill = round(84 * value / 100) if value is not None else 0
         for y in range(top, top + 8):
             for x in range(2, 86):
-                rgba = color if x - 2 < fill else (180, 185, 195, 90)
+                rgba = color if x - 2 < fill else (185, 185, 185, 90)
                 # Unknown limits have a short neutral dash in the track.
                 if value is None and 38 <= x < 50:
-                    rgba = (180, 185, 195, 255)
+                    rgba = (185, 185, 185, 255)
                 offset = (y * width + x) * 4
                 pixels[offset:offset + 4] = bytes(rgba)
 
@@ -117,10 +113,19 @@ def describe(title, window):
     value = remaining(window)
     if value is None:
         return f"{title}: unavailable"
-    text = f"{title}: {value:.0f}% remaining"
+    text = f"{title}: {value:.0f}% left"
     reset = window.get("resetsAt")
-    if isinstance(reset, (int, float)):
-        text += " · resets " + datetime.fromtimestamp(reset).strftime("%a %-I:%M %p")
+    if isinstance(reset, (int, float)) and math.isfinite(reset):
+        minutes = max(0, math.ceil((reset - time.time()) / 60))
+        days, minutes = divmod(minutes, 1440)
+        hours, minutes = divmod(minutes, 60)
+        if days:
+            duration = f"{days}d {hours}h"
+        elif hours:
+            duration = f"{hours}h {minutes}m"
+        else:
+            duration = f"{minutes}m"
+        text += " · resets in " + duration
     return text
 
 
