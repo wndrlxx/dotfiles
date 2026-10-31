@@ -42,6 +42,7 @@ delivery = "herdr"
 enabled = true
 
 [ui]
+sidebar_collapsed_mode = "hidden"
 pane_borders = "always"
 pane_outer_borders = true
 pane_gaps = true
