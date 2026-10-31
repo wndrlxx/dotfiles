@@ -48,19 +48,23 @@ sketchybar --add item front_app left \
            --set front_app icon.drawing=off script="$PLUGIN_DIR/front_app.sh" \
            --subscribe front_app front_app_switched
 
-# Date and time with MacBook notch
+# With notch - Left: day and time; Right: weather
+sketchybar --add item clock.notch q \
+           --set clock.notch drawing=off label.padding_right=0 update_freq=6 script="$PLUGIN_DIR/clock.sh"
 sketchybar --add item date.notch q \
-           --set date.notch drawing=off update_freq=600 script="$PLUGIN_DIR/date.sh"
+           --set date.notch drawing=off label.padding_right=0 update_freq=600 script="$PLUGIN_DIR/date.sh"
+sketchybar --add item weather.notch e \
+           --set weather.notch drawing=off label="--°C"
 
-sketchybar --add item clock.notch e \
-           --set clock.notch drawing=off update_freq=6 script="$PLUGIN_DIR/clock.sh"
-
-# Date and time, no notch
+# Without notch - Center: time, day, weather
+sketchybar --add item clock center \
+           --set clock drawing=off label.padding_right=0 update_freq=6 script="$PLUGIN_DIR/clock.sh"
 sketchybar --add item date center \
            --set date drawing=off update_freq=600 script="$PLUGIN_DIR/date.sh"
-
-sketchybar --add item clock center \
-           --set clock drawing=off update_freq=6 script="$PLUGIN_DIR/clock.sh"
+sketchybar --add item weather center \
+           --set weather drawing=off label="--°C" updates=on update_freq=900 \
+                 script="/bin/bash \"$PLUGIN_DIR/weather.sh\"" \
+           --subscribe weather system_woke
 
 # Refresh display associations after monitor changes, including lid open/close.
 sketchybar --add item clock_layout left \
