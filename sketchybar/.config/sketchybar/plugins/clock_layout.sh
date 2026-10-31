@@ -20,7 +20,7 @@ notch_displays=$(jq -r --argjson notched "$notched_displays" '
 ' <<< "$displays") || exit 1
 
 args=()
-for item in date clock; do
+for item in weather date clock; do
   if [ -n "$center_displays" ]; then
     args+=(--set "$item" display="$center_displays" drawing=on)
   else
