@@ -29,6 +29,8 @@ default=(
 sketchybar --default "${default[@]}"
 
 sketchybar --add event aerospace_workspace_change
+sketchybar --add event weather_updated
+sketchybar --add event ellie_app_changed
 
 # Active workspace indicator
 sketchybar --add item aerospace_workspace left \
@@ -49,18 +51,22 @@ sketchybar --add item front_app left \
            --subscribe front_app front_app_switched
 
 # With notch - Left: day and time; Right: weather
+# Retain current weather while the visible weather slots display Ellie's timer.
+sketchybar --add item weather_data left \
+           --set weather_data drawing=off icon="☁" label="--°C"
+
 sketchybar --add item clock.notch q \
-           --set clock.notch drawing=off label.padding_right=0 update_freq=6 script="$PLUGIN_DIR/clock.sh"
+           --set clock.notch drawing=off label.padding_left=7 label.padding_right=0 update_freq=6 script="$PLUGIN_DIR/clock.sh"
 sketchybar --add item date.notch q \
-           --set date.notch drawing=off label.padding_right=0 update_freq=600 script="$PLUGIN_DIR/date.sh"
+           --set date.notch drawing=off label.padding_left=7 label.padding_right=0 update_freq=600 script="$PLUGIN_DIR/date.sh"
 sketchybar --add item weather.notch e \
            --set weather.notch drawing=off label="--°C"
 
 # Without notch - Center the group with no extra padding at its outer edges.
 sketchybar --add item clock center \
-           --set clock drawing=off label.padding_left=0 update_freq=6 script="$PLUGIN_DIR/clock.sh"
+           --set clock drawing=off label.padding_left=0 label.padding_right=4 update_freq=6 script="$PLUGIN_DIR/clock.sh"
 sketchybar --add item date center \
-           --set date drawing=off label.padding_left=0 update_freq=600 script="$PLUGIN_DIR/date.sh"
+           --set date drawing=off label.padding_left=0 label.padding_right=4 update_freq=600 script="$PLUGIN_DIR/date.sh"
 sketchybar --add item weather center \
            --set weather drawing=off label="--°C" label.padding_left=4 label.padding_right=0 updates=on update_freq=900 \
                  script="/bin/bash \"$PLUGIN_DIR/weather.sh\"" \
@@ -73,14 +79,8 @@ sketchybar --add item clock_layout left \
            --subscribe clock_layout display_change system_woke
 
 # Codex remaining quota: five-hour bar above, weekly bar below.
-sketchybar --add item codex_logo right \
-           --set codex_logo width=14 padding_left=0 padding_right=0 \
-                 background.drawing=on background.image.drawing=on \
-                 background.image="$CONFIG_DIR/assets/codex.png" background.image.scale=0.39 \
-                 icon.drawing=off label.drawing=off
-
 sketchybar --add item codex_usage right \
-           --set codex_usage width=48 padding_left=0 padding_right=0 \
+           --set codex_usage width=48 padding_left=8 padding_right=2 \
                  background.drawing=on \
                  icon.drawing=off label.drawing=off update_freq=300 \
                  script="python3 \"$PLUGIN_DIR/codex_usage.py\"" \
@@ -89,15 +89,40 @@ sketchybar --add item codex_usage right \
                  popup.background.border_color=0xff454b55 \
            --subscribe codex_usage system_woke mouse.entered mouse.exited mouse.exited.global
 
+# Codex agents managed by Herdr: hide idle/unknown, show status counts on changes.
+for state in working waiting done; do
+  sketchybar --add item "codex_state.$state" right \
+             --set "codex_state.$state" drawing=off padding_right=6 \
+                   label.padding_left=4 label.padding_right=0 \
+                   script="python3 -B \"$PLUGIN_DIR/codex_status.py\" --popup" \
+                   popup.align=right popup.height=22 popup.background.color=0xee20242b \
+                   popup.background.corner_radius=6 popup.background.border_width=1 \
+                   popup.background.border_color=0xff454b55 \
+             --subscribe "codex_state.$state" mouse.entered mouse.exited mouse.exited.global
+done
+
 # Conditionally show CPU usage to the left of the Codex widget.
 sketchybar --add item cpu right \
-           --set cpu update_freq=6 script="$CONFIG_DIR/plugins/cpu.sh"
+           --set cpu label.padding_right=13 update_freq=6 script="$CONFIG_DIR/plugins/cpu.sh"
 
 for detail in primary secondary status; do
   sketchybar --add item "codex_usage.$detail" popup.codex_usage \
              --set "codex_usage.$detail" icon.drawing=off label="Loading…" \
                    label.padding_left=12 label.padding_right=12
 done
+
+# Render Ellie's active timer in the weather slots; this controller stays hidden.
+sketchybar --add item ellie_timer left \
+           --set ellie_timer drawing=off updates=on update_freq=0 \
+                 script="python3 -B \"$PLUGIN_DIR/ellie_timer.py\"" \
+           --subscribe ellie_timer system_woke weather_updated ellie_app_changed
+
+# Native observer enables ticking only while Ellie is open.
+/bin/bash "$PLUGIN_DIR/ellie_watcher.sh" "$PPID" > /dev/null &
+
+# One idle observer, reused on reload; no recurring status script or agent prompts.
+python3 -B "$PLUGIN_DIR/codex_status.py" --watch \
+  --bar-pid "$PPID" > /dev/null &
 
 ##### Force all scripts to run the first time (never do this in a script) #####
 sketchybar --update

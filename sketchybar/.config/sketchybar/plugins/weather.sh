@@ -4,8 +4,8 @@
 URL='https://api.open-meteo.com/v1/forecast?latitude=49.2827&longitude=-123.1207&current=temperature_2m,weather_code,is_day&temperature_unit=celsius&timezone=America%2FVancouver'
 
 set_weather() {
-  sketchybar --set weather icon="$1" label="$2" \
-             --set weather.notch icon="$1" label="$2"
+  sketchybar --set weather_data icon="$1" label="$2" \
+             --trigger weather_updated
 }
 
 unavailable() {
