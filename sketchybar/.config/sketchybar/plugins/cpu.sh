@@ -1,5 +1,6 @@
 #!/bin/bash
-CPU=$(top -l 2 -s 1 | grep -E "^CPU" | tail -1 | awk '{print $3}' | cut -d% -f1)
+# Include both user and system CPU time in total utilization.
+CPU=$(top -l 2 -s 1 -n 0 | awk '/^CPU usage:/ { cpu = $3 + $5 } END { print cpu }')
 ROUNDED=$(printf '%.0f' "$CPU")
 
 if awk -v cpu="$CPU" 'BEGIN { exit !(cpu >= 30) }'; then

@@ -89,6 +89,10 @@ sketchybar --add item codex_usage right \
                  popup.background.border_color=0xff454b55 \
            --subscribe codex_usage system_woke mouse.entered mouse.exited mouse.exited.global
 
+# Conditionally show CPU usage between agent indicators and Codex usage bars
+sketchybar --add item cpu right \
+           --set cpu label.padding_left=0 label.padding_right=13 update_freq=6 script="$CONFIG_DIR/plugins/cpu.sh"
+
 # Codex agents managed by Herdr: hide idle/unknown, show status counts on changes.
 for state in working waiting done; do
   sketchybar --add item "codex_state.$state" right \
@@ -100,10 +104,6 @@ for state in working waiting done; do
                    popup.background.border_color=0xff454b55 \
              --subscribe "codex_state.$state" mouse.entered mouse.exited mouse.exited.global
 done
-
-# Conditionally show CPU usage to the left of the Codex widget.
-sketchybar --add item cpu right \
-           --set cpu label.padding_right=13 update_freq=6 script="$CONFIG_DIR/plugins/cpu.sh"
 
 for detail in primary secondary status; do
   sketchybar --add item "codex_usage.$detail" popup.codex_usage \
