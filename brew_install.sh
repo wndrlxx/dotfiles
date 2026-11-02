@@ -2,8 +2,8 @@
 set -euo pipefail
 
 brew install --cask nikitabobko/tap/aerospace
-brew install --cask antinote
 brew install --cask alcove
+brew install --cask antinote
 brew install --cask bitwarden
 brew install --cask claude-code
 brew install --cask ghostty
@@ -14,6 +14,7 @@ brew install --cask shottr
 brew install --cask superwhisper
 
 brew tap FelixKratz/formulae
+brew install borders
 brew install sketchybar
 
 brew install antidote
@@ -29,9 +30,7 @@ brew install jq
 brew install lazygit
 brew install mitmproxy
 brew install neofetch
-brew install anomalyco/tap/opencode
 brew install pi-coding-agent
-brew install pnpm
 brew install sqlite
 brew install starship
 brew install stow
