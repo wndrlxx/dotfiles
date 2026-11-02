@@ -5,7 +5,7 @@ URL='https://api.open-meteo.com/v1/forecast?latitude=49.2827&longitude=-123.1207
 
 set_weather() {
   sketchybar --set weather_data icon="$1" label="$2" \
-             --trigger weather_updated
+    --trigger weather_updated
 }
 
 unavailable() {
@@ -29,15 +29,15 @@ if ! VALUES=$(printf '%s' "$WEATHER" | jq -er '
   exit 0
 fi
 
-IFS=$'\t' read -r TEMPERATURE CODE IS_DAY <<< "$VALUES"
+IFS=$'\t' read -r TEMPERATURE CODE IS_DAY <<<"$VALUES"
 case "$CODE" in
-  0) if [ "$IS_DAY" = 1 ]; then ICON="☀"; else ICON="☾"; fi ;;
-  1|2) ICON="⛅" ;;
-  3|45|48) ICON="☁" ;;
-  51|53|55|56|57|61|63|65|66|67|80|81|82) ICON="🌧" ;;
-  71|73|75|77|85|86) ICON="❄" ;;
-  95|96|99) ICON="⛈" ;;
-  *) ICON="☁" ;;
+0) if [ "$IS_DAY" = 1 ]; then ICON="☀"; else ICON="☾"; fi ;;
+1 | 2) ICON="⛅" ;;
+3 | 45 | 48) ICON="☁" ;;
+51 | 53 | 55 | 56 | 57 | 61 | 63 | 65 | 66 | 67 | 80 | 81 | 82) ICON="🌧" ;;
+71 | 73 | 75 | 77 | 85 | 86) ICON="❄" ;;
+95 | 96 | 99) ICON="⛈" ;;
+*) ICON="☁" ;;
 esac
 
 set_weather "$ICON" "${TEMPERATURE}°C"
