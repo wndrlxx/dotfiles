@@ -7,7 +7,7 @@ PLUGIN_DIR="$CONFIG_DIR/plugins"
 # If you are looking for other colors, see the color picker:
 # https://felixkratz.github.io/SketchyBar/config/tricks#color-picker
 
-sketchybar --bar position=top height=28 blur_radius=30 color=0x00000000 padding_left=12 padding_right=12
+sketchybar --bar position=top topmost=on height=28 blur_radius=30 color=0x00000000 padding_left=12 padding_right=12
 
 ##### Changing Defaults #####
 # We now change some default values, which are applied to all further items.
@@ -68,7 +68,7 @@ sketchybar --add item clock center \
 sketchybar --add item date center \
            --set date drawing=off label.padding_left=0 label.padding_right=4 update_freq=600 script="$PLUGIN_DIR/date.sh"
 sketchybar --add item weather center \
-           --set weather drawing=off label="--°C" label.padding_left=4 label.padding_right=0 updates=on update_freq=900 \
+           --set weather drawing=off label="--°C" padding_left=8 label.padding_left=4 label.padding_right=0 updates=on update_freq=900 \
                  script="/bin/bash \"$PLUGIN_DIR/weather.sh\"" \
            --subscribe weather system_woke
 
