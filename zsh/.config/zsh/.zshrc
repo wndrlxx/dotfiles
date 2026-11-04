@@ -38,7 +38,9 @@ fi
 export PI_CODING_AGENT_DIR="$HOME/.config/pi"
 
 # initialize mise before fzf
-eval "$(~/.local/bin/mise activate zsh)"
+if command -v mise >/dev/null; then
+  eval "$(mise activate zsh)"
+fi
 
 # fzf config
 source <(fzf --zsh)
@@ -208,11 +210,23 @@ pyenv() {
 
 # Antidote zsh plugin manager config
 if [[ "$OSTYPE" == "darwin"* ]]; then
-	source $(brew --prefix)/opt/antidote/share/antidote/antidote.zsh
+    source "$(brew --prefix)/opt/antidote/share/antidote/antidote.zsh"
 else
-  source "$HOME/.antidote/antidote.zsh"
+    for antidote_file in \
+        /usr/share/zsh-antidote/antidote.zsh \
+        "${ZDOTDIR:-$HOME}/.antidote/antidote.zsh" \
+        "$HOME/.antidote/antidote.zsh"
+    do
+        if [[ -r "$antidote_file" ]]; then
+            source "$antidote_file"
+            break
+        fi
+    done
+    unset antidote_file
 fi
-antidote load ~/.config/zsh/.zsh_plugins.txt ~/.config/zsh/.zsh_plugins.zsh
+if (( $+functions[antidote] )); then
+    antidote load ~/.config/zsh/.zsh_plugins.txt ~/.config/zsh/.zsh_plugins.zsh
+fi
 
 # Initialize tools
 eval "$(atuin init zsh)"
