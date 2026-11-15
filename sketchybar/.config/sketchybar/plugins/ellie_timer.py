@@ -240,20 +240,20 @@ def update_bar(result):
                  "icon.background.height=20", "icon.background.corner_radius=6",
                  "icon.padding_left=7", "icon.padding_right=7"]
     else:
-        source = subprocess.run(["sketchybar", "--query", "weather_data"],
-                                check=True, capture_output=True, text=True)
-        weather = json.loads(source.stdout)
-        icon, label, click = weather["icon"]["value"], weather["label"]["value"], ""
+        icon, label, click = "", "", ""
         style = ["icon.color=0xffffffff", "icon.font=Hack Nerd Font:12.0",
                  "icon.background.drawing=off", "icon.padding_left=0", "icon.padding_right=0"]
-    # clock_layout.sh owns drawing and display associations for both weather slots.
+    # clock_layout.sh owns drawing and display associations for both timer slots.
     # Non-notched displays move the clock/date right only while a timer runs.
     command = ["sketchybar"]
-    for name in ("weather", "weather.notch"):
-        gap = 7 if result["running"] or name.endswith(".notch") else 4
+    for name in ("timer", "timer.notch"):
+        gap = 7 if result["running"] else 0
         label_color = "0xfff5deb3" if result["running"] else "0xffffffff"
         command += ["--set", name, f"icon={icon}", f"label={label}", f"click_script={click}",
-                    f"label.color={label_color}", f"label.padding_left={gap}", *style]
+                    f"label.color={label_color}", f"label.padding_left={gap}",
+                    f"icon.drawing={'on' if result['running'] else 'off'}",
+                    f"label.drawing={'on' if result['running'] else 'off'}",
+                    f"padding_left={8 if result['running'] and name == 'timer' else 0}", *style]
     for name in ("clock", "date", "clock.notch", "date.notch"):
         position = "q" if name.endswith(".notch") else ("right" if result["running"] else "center")
         padding = 0

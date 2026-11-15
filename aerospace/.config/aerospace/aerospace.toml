@@ -147,12 +147,12 @@ preset = 'qwerty'
 
 # Gaps between windows (inner-*) and between monitor edges (outer-*).
 [gaps]
-inner.horizontal = [{ monitor.'built-in' = 8 }, 12]
-inner.vertical = [{ monitor.'built-in' = 8 }, 12]
-outer.top = [{ monitor.'built-in' = 4 }, 28]
-outer.right = [{ monitor.'built-in' = 8 }, 12]
-outer.bottom = [{ monitor.'built-in' = 8 }, 12]
-outer.left = [{ monitor.'built-in' = 8 }, 12]
+inner.horizontal = [{ monitor.'built-in' = 10 }, 14]
+inner.vertical = [{ monitor.'built-in' = 10 }, 14]
+outer.top = [{ monitor.'built-in' = 10 }, 32]
+outer.right = [{ monitor.'built-in' = 10 }, 14]
+outer.bottom = [{ monitor.'built-in' = 10 }, 14]
+outer.left = [{ monitor.'built-in' = 10 }, 14]
 
 # 'main' binding mode declaration
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes

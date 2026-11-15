@@ -7,7 +7,7 @@ PLUGIN_DIR="$CONFIG_DIR/plugins"
 # If you are looking for other colors, see the color picker:
 # https://felixkratz.github.io/SketchyBar/config/tricks#color-picker
 
-sketchybar --bar position=top topmost=on height=28 blur_radius=30 color=0x00000000 padding_left=12 padding_right=12
+sketchybar --bar position=top topmost=on height=32 blur_radius=30 color=0x00000000 padding_left=12 padding_right=12
 
 ##### Changing Defaults #####
 # We now change some default values, which are applied to all further items.
@@ -29,7 +29,6 @@ default=(
 sketchybar --default "${default[@]}"
 
 sketchybar --add event aerospace_workspace_change
-sketchybar --add event weather_updated
 sketchybar --add event ellie_app_changed
 
 # Active workspace indicator
@@ -50,27 +49,22 @@ sketchybar --add item front_app left \
            --set front_app icon.drawing=off script="$PLUGIN_DIR/front_app.sh" \
            --subscribe front_app front_app_switched
 
-# With notch - Left: day and time; Right: weather
-# Retain current weather while the visible weather slots display Ellie's timer.
-sketchybar --add item weather_data left \
-           --set weather_data drawing=off icon="☁" label="--°C"
+# With notch - Left: day and time; Right: active Ellie timer.
 
 sketchybar --add item clock.notch q \
            --set clock.notch drawing=off label.padding_left=7 label.padding_right=0 update_freq=6 script="$PLUGIN_DIR/clock.sh"
 sketchybar --add item date.notch q \
            --set date.notch drawing=off label.padding_left=7 label.padding_right=0 update_freq=600 script="$PLUGIN_DIR/date.sh"
-sketchybar --add item weather.notch e \
-           --set weather.notch drawing=off label="--°C"
+sketchybar --add item timer.notch e \
+           --set timer.notch drawing=off icon.drawing=off label.drawing=off
 
 # Without notch - Center the group with no extra padding at its outer edges.
 sketchybar --add item clock center \
            --set clock drawing=off label.padding_left=0 label.padding_right=4 update_freq=6 script="$PLUGIN_DIR/clock.sh"
 sketchybar --add item date center \
            --set date drawing=off label.padding_left=0 label.padding_right=4 update_freq=600 script="$PLUGIN_DIR/date.sh"
-sketchybar --add item weather center \
-           --set weather drawing=off label="--°C" padding_left=8 label.padding_left=4 label.padding_right=0 updates=on update_freq=900 \
-                 script="/bin/bash \"$PLUGIN_DIR/weather.sh\"" \
-           --subscribe weather system_woke
+sketchybar --add item timer center \
+           --set timer drawing=off icon.drawing=off label.drawing=off label.padding_right=0
 
 # Refresh display associations after monitor changes, including lid open/close.
 sketchybar --add item clock_layout left \
@@ -119,11 +113,11 @@ for detail in primary secondary status; do
                    label.padding_left=12 label.padding_right=12
 done
 
-# Render Ellie's active timer in the weather slots; this controller stays hidden.
+# Render Ellie's active timer; this controller stays hidden.
 sketchybar --add item ellie_timer left \
            --set ellie_timer drawing=off updates=on update_freq=0 \
                  script="python3 -B \"$PLUGIN_DIR/ellie_timer.py\"" \
-           --subscribe ellie_timer system_woke weather_updated ellie_app_changed
+           --subscribe ellie_timer system_woke ellie_app_changed
 
 # Native observer enables ticking only while Ellie is open.
 /bin/bash "$PLUGIN_DIR/ellie_watcher.sh" "$PPID" > /dev/null &
