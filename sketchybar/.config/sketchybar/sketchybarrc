@@ -89,9 +89,17 @@ sketchybar --add item codex_usage right \
                  popup.background.border_color=0xff454b55 \
            --subscribe codex_usage system_woke mouse.entered mouse.exited mouse.exited.global
 
-# Conditionally show CPU usage between agent indicators and Codex usage bars
+# Conditionally show CPU usage between network throughput and Codex usage bars.
 sketchybar --add item cpu right \
            --set cpu label.padding_left=0 label.padding_right=13 update_freq=6 script="$CONFIG_DIR/plugins/cpu.sh"
+
+# Right-side items are added right-to-left, placing network to the left of CPU.
+# Show each network direction only after three seconds above 1 MB/s.
+sketchybar --add item network right \
+           --set network drawing=off updates=on update_freq=1 \
+                 icon.drawing=off label.padding_left=0 label.padding_right=13 \
+                 script="python3 -B \"$PLUGIN_DIR/network.py\"" \
+           --subscribe network system_woke
 
 # Codex agents managed by Herdr: hide idle/unknown, show status counts on changes.
 for state in working waiting done; do
