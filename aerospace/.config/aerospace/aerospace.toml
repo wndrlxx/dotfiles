@@ -81,7 +81,7 @@ if.app-name-regex-substring = 'weather'
 run = 'layout tiling'
 
 [[on-window-detected]]
-if.app-name-regex-substring = 'ellie'
+if.app-name-regex-substring = 'sunsama'
 run = ['layout tiling', 'move-node-to-workspace 1']
 
 [[on-window-detected]]
