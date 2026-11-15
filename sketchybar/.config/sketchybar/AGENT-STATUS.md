@@ -1,7 +1,8 @@
-# Codex agent indicators
+# Codex and Pi agent indicators
 
-`codex_status.py` observes the default local Herdr session. It shows only Codex
-agents managed by Herdr, alongside the existing quota bars:
+`codex_status.py` observes the default local Herdr session. It shows combined
+counts of Codex and Pi agents managed by Herdr, alongside the existing Codex
+quota bars:
 
 | Indicator | Herdr state |
 | --- | --- |
@@ -22,8 +23,8 @@ hides the indicators and retries the socket every five seconds. Config reloads
 reuse the observer, and it exits when SketchyBar exits.
 
 The socket defaults to `~/.config/herdr/herdr.sock`, with `HERDR_SOCKET_PATH` and
-`HERDR_CONFIG_PATH` overrides. Other Herdr sessions, remote machines, and Codex
-agents outside Herdr are not included. No Codex API keys or new hooks are needed.
+`HERDR_CONFIG_PATH` overrides. Other Herdr sessions, remote machines, and agents
+outside Herdr are not included. No API keys or new hooks are needed.
 
 Inspect counts without changing the bar:
 

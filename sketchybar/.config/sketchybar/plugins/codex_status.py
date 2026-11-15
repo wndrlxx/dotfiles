@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Show Codex agents using Herdr's read-only, local status event stream."""
+"""Show Codex and Pi agents using Herdr's read-only, local status event stream."""
 import argparse
 import fcntl
 import json
@@ -12,6 +12,7 @@ import stat
 import subprocess
 import time
 
+SUPPORTED_AGENTS = {"codex", "pi"}
 STATES = {"working": ("Working", "◌", "0xffe0af68"),
           "waiting": ("Input", "?", "0xfff7768e"),
           "done": ("Done", "✓", "0xff7dcfff")}
@@ -40,7 +41,7 @@ def list_agents(path):
     with request(path, "agent.list", {}) as connection, connection.makefile("rb") as stream:
         data = stream.readline(2 * 1024 * 1024)
         response = json.loads(data)
-        return [agent for agent in response["result"]["agents"] if agent.get("agent") == "codex"]
+        return [agent for agent in response["result"]["agents"] if agent.get("agent") in SUPPORTED_AGENTS]
 
 
 def subscribe(path, pane_ids):
@@ -69,7 +70,7 @@ def receive_events(connection, buffer):
 def groups(agents):
     result = {state: [] for state in STATES}
     for agent in agents:
-        if agent.get("agent") != "codex":
+        if agent.get("agent") not in SUPPORTED_AGENTS:
             continue
         state = {"working": "working", "blocked": "waiting", "done": "done"}.get(agent.get("agent_status"))
         if state:
