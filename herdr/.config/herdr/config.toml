@@ -20,6 +20,31 @@ focus_pane_up = "ctrl+alt+k"
 focus_pane_right = "ctrl+alt+l"
 toggle_sidebar = "prefix+p"
 
+# Swap the focused pane with its neighbor.
+[[keys.command]]
+description = "Swap pane left"
+key = "ctrl+alt+cmd+h"
+type = "shell"
+command = "/opt/homebrew/bin/herdr pane swap --direction left"
+
+[[keys.command]]
+description = "Swap pane down"
+key = "ctrl+alt+cmd+j"
+type = "shell"
+command = "/opt/homebrew/bin/herdr pane swap --direction down"
+
+[[keys.command]]
+description = "Swap pane up"
+key = "ctrl+alt+cmd+k"
+type = "shell"
+command = "/opt/homebrew/bin/herdr pane swap --direction up"
+
+[[keys.command]]
+description = "Swap pane right"
+key = "ctrl+alt+cmd+l"
+type = "shell"
+command = "/opt/homebrew/bin/herdr pane swap --direction right"
+
 # Lazygit over the focused pane. q closes it.
 [[keys.command]]
 description = "Lazygit"
