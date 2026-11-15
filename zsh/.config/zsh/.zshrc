@@ -85,7 +85,6 @@ else
         --color=spinner:#ea9d34,info:#56949f \
         --color=pointer:#907aa9,marker:#b4637a,prompt:#797593"
 fi
-bindkey -e  # force emacs mode; overrides vi mode set by fzf via $EDITOR
 
 # zsh hooks
 chpwd() {
@@ -172,6 +171,7 @@ alias c="codex resume"
 alias pu="pi update && pi update --extensions"
 alias hu="brew update && brew upgrade herdr && herdr status"
 alias hr="herdr server stop && herdr"
+alias weather="curl 'https://wttr.in/Richmond,BC,Canada?m&format=4'"
 
 # Editor aliases
 alias n="nvim ."
@@ -207,6 +207,9 @@ pyenv() {
 }
 
 # Antidote zsh plugin manager config
+YSU_IGNORED_ALIASES=(j)
+# Initialize Vi mode before custom bindings and Atuin to preserve their keys.
+ZVM_INIT_MODE=sourcing
 if [[ "$OSTYPE" == "darwin"* ]]; then
 	source $(brew --prefix)/opt/antidote/share/antidote/antidote.zsh
 else
