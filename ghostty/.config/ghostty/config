@@ -39,3 +39,9 @@ keybind = super+shift+equal=equalize_splits
 # Send Ctrl+Tab and Ctrl+Shift+Tab in a format Herdr can recognize.
 keybind = ctrl+tab=csi:9;5u
 keybind = ctrl+shift+tab=csi:9;6u
+
+# Forward pane-swap shortcuts to Herdr (CSI-u: Ctrl + Alt + Super).
+keybind = ctrl+alt+super+h=csi:104;15u
+keybind = ctrl+alt+super+j=csi:106;15u
+keybind = ctrl+alt+super+k=csi:107;15u
+keybind = ctrl+alt+super+l=csi:108;15u
