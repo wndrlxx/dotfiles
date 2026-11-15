@@ -171,7 +171,6 @@ class TimerTests(unittest.TestCase):
     def test_only_non_notched_clock_and_date_move_right_while_timer_runs(self):
         for running in (True, False):
             with self.subTest(running=running), patch("ellie_timer.subprocess.run") as run:
-                run.return_value = Mock(stdout='{"icon":{"value":"☀"},"label":{"value":"12°C"}}')
                 update_bar({"running": running, "icon": "⏱", "label": "01:23 Study"})
                 command = run.call_args.args[0]
                 for name in ("clock", "date", "clock.notch", "date.notch"):
@@ -185,7 +184,7 @@ class TimerTests(unittest.TestCase):
                     self.assertEqual(command[offset + 3], f"label.padding_left={left}")
                     self.assertEqual(command[offset + 4], f"label.padding_right={right}")
 
-    def test_timer_replaces_both_weather_slots_without_changing_layout(self):
+    def test_timer_shows_in_both_slots_without_changing_layout(self):
         with patch("ellie_timer.subprocess.run") as run:
             update_bar({"running": True, "icon": "⏱", "label": "01:23 Study"})
         command = run.call_args.args[0]
@@ -194,23 +193,30 @@ class TimerTests(unittest.TestCase):
         self.assertEqual(command.count("icon.background.drawing=on"), 2)
         self.assertEqual(command.count("icon.color=0xfffbbf24"), 2)
         self.assertEqual(command.count("label.color=0xfff5deb3"), 2)
-        self.assertIn("weather", command)
-        self.assertIn("weather.notch", command)
+        self.assertIn("timer", command)
+        self.assertIn("timer.notch", command)
         self.assertEqual(command.count("click_script=open -a Ellie"), 2)
+        self.assertEqual(command.count("icon.drawing=on"), 2)
+        self.assertEqual(command.count("label.drawing=on"), 2)
         self.assertFalse(any(arg.startswith(("drawing=", "display=")) for arg in command))
 
-    def test_stop_restores_current_weather_and_clears_timer_click(self):
+    def test_stop_hides_timer_and_clears_content_without_querying_weather(self):
         with patch("ellie_timer.subprocess.run") as run:
-            run.return_value = Mock(stdout='{"icon":{"value":"☀"},"label":{"value":"12°C"}}')
             update_bar({"running": False})
-        self.assertEqual(run.call_args_list[0].args[0], ["sketchybar", "--query", "weather_data"])
+        run.assert_called_once()
         command = run.call_args.args[0]
-        self.assertEqual(command.count("label=12°C"), 2)
+        self.assertNotIn("--query", command)
+        self.assertEqual(command.count("icon="), 2)
+        self.assertEqual(command.count("label="), 2)
         self.assertEqual(command.count("click_script="), 2)
+        self.assertEqual(command.count("icon.drawing=off"), 2)
+        self.assertEqual(command.count("label.drawing=off"), 2)
         self.assertEqual(command.count("icon.background.drawing=off"), 2)
-        self.assertEqual(command.count("icon.color=0xffffffff"), 2)
-        self.assertEqual(command.count("icon.padding_left=0"), 2)
-        self.assertIn("label.padding_left=4", command)
+        for name in ("timer", "timer.notch"):
+            offset = command.index(name)
+            end = command.index("--set", offset)
+            self.assertIn("padding_left=0", command[offset:end])
+            self.assertIn("label.padding_left=0", command[offset:end])
 
     def test_running_timer_and_no_credentials_in_snapshot(self):
         state = snapshot(records())

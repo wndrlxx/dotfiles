@@ -98,7 +98,7 @@ func tick() {
         : String(format: "%02d:%02d", value / 60, value % 60)
     let text = "\(sample.symbol) \(clock)"
     guard text != lastTickText else { return }
-    sendToBar(["--set", "weather", "icon=\(text)", "--set", "weather.notch", "icon=\(text)"])
+    sendToBar(["--set", "timer", "icon=\(text)", "--set", "timer.notch", "icon=\(text)"])
     lastTickText = text
 }
 
