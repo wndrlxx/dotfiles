@@ -93,7 +93,7 @@ sketchybar --add item codex_usage right \
 sketchybar --add item cpu right \
            --set cpu label.padding_left=0 label.padding_right=13 update_freq=6 script="$CONFIG_DIR/plugins/cpu.sh"
 
-# Codex agents managed by Herdr: hide idle/unknown, show status counts on changes.
+# Codex and Pi agents managed by Herdr: hide idle/unknown, show combined status counts on changes.
 for state in working waiting done; do
   sketchybar --add item "codex_state.$state" right \
              --set "codex_state.$state" drawing=off padding_right=6 \
