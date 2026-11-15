@@ -1,3 +1,4 @@
+import json
 import sys
 import unittest
 from pathlib import Path
@@ -5,7 +6,7 @@ from unittest.mock import Mock, patch
 
 sys.dont_write_bytecode = True
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "plugins"))
-from codex_status import Renderer, groups, receive_events
+from codex_status import Renderer, groups, list_agents, receive_events
 
 
 def agent(pane, state, kind="codex", title="Task"):
@@ -36,19 +37,33 @@ class CodexStatusTests(unittest.TestCase):
         with self.assertRaises(ConnectionError):
             receive_events(connection, buffer)
 
-    def test_only_codex_working_blocked_and_done_are_visible(self):
+    def test_only_supported_agents_and_active_states_are_visible(self):
         data = [agent("p1", "working"), agent("p2", "blocked"), agent("p3", "done"),
-                agent("p4", "idle"), agent("p5", "unknown"), agent("p6", "working", "claude")]
-        self.assertEqual(groups(data), {"working": [("p1", "Task")],
-                                       "waiting": [("p2", "Task")], "done": [("p3", "Task")]})
+                agent("p4", "idle"), agent("p5", "unknown"), agent("p6", "working", "claude"),
+                agent("p7", "working", "pi"), agent("p8", "blocked", "pi"),
+                agent("p9", "done", "pi"), agent("p10", "idle", "pi"), agent("p11", "unknown", "pi")]
+        self.assertEqual(groups(data), {"working": [("p1", "Task"), ("p7", "Task")],
+                                       "waiting": [("p2", "Task"), ("p8", "Task")],
+                                       "done": [("p3", "Task"), ("p9", "Task")]})
+
+    def test_snapshot_keeps_pi_panes_for_status_subscriptions(self):
+        data = [agent("p1", "working"), agent("p2", "blocked", "pi"),
+                agent("p3", "idle", "pi"), agent("p4", "working", "claude")]
+        with patch("codex_status.request") as request:
+            stream = request.return_value.__enter__.return_value.makefile.return_value.__enter__.return_value
+            stream.readline.return_value = json.dumps({"result": {"agents": data}}).encode()
+            self.assertEqual(list_agents("test.sock"), data[:3])
+            request.assert_called_once_with("test.sock", "agent.list", {})
 
     def test_counts_and_popup_titles_follow_agent_state(self):
         with patch("codex_status.subprocess.run") as run:
             renderer = Renderer()
-            renderer.render([agent("p1", "working", title='Study "$HOME"'), agent("p2", "working")])
+            renderer.render([agent("p1", "working", title='Study "$HOME"'),
+                             agent("p2", "working", "pi", title="Pi task")])
             command = run.call_args.args[0]
             self.assertIn("label=Working: 2", command)
             self.assertIn('label=Study "$HOME"', command)
+            self.assertIn("label=Pi task", command)
             self.assertIn("popup.codex_state.working", command)
             renderer.render([agent("p1", "idle"), agent("p2", "idle")])
             command = run.call_args.args[0]

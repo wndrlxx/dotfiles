@@ -79,27 +79,30 @@ with Path(__file__).with_name("calls.jsonl").open("a") as f:
             index = last.index(f"codex_state.{state}")
             return last[index + 1] == "drawing=on"
 
-        def update(state):
-            agents[:] = [{"agent": "codex", "agent_status": state, "pane_id": "w1:p1",
+        def update(state, kind, pane):
+            agents[:] = [{"agent": kind, "agent_status": state, "pane_id": pane,
                           "terminal_title_stripped": "Isolated agent"}]
             for connection in list(subscribers):
                 try:
-                    connection.sendall(b'{"event":"pane_agent_detected","data":{}}\n')
+                    connection.sendall(b'{"event":"pane.agent_detected","data":{}}\n')
                 except OSError:
                     subscribers.remove(connection)
 
         try:
             wait_for(lambda: len(calls()) > 0, "Initial idle render missing")
             assert not any(visible(state) for state in ("working", "waiting", "done"))
-            update("working")
-            wait_for(lambda: visible("working"), "Working not shown")
-            wait_for(lambda: any(s.get("pane_id") == "w1:p1" for s in subscriptions[-1]), "New pane not subscribed")
-            update("blocked")
-            wait_for(lambda: visible("waiting") and not visible("working"), "Waiting state not shown")
-            update("done")
-            wait_for(lambda: visible("done") and not visible("waiting"), "Done state not shown")
-            update("idle")
-            wait_for(lambda: not any(visible(state) for state in ("working", "waiting", "done")), "Idle not hidden")
+            for kind, pane in (("codex", "w1:p1"), ("pi", "w1:p2")):
+                update("working", kind, pane)
+                wait_for(lambda: visible("working"), f"{kind}: Working not shown")
+                wait_for(lambda: any(s.get("pane_id") == pane for s in subscriptions[-1]),
+                         f"{kind}: New pane not subscribed")
+                update("blocked", kind, pane)
+                wait_for(lambda: visible("waiting") and not visible("working"), f"{kind}: Waiting state not shown")
+                update("done", kind, pane)
+                wait_for(lambda: visible("done") and not visible("waiting"), f"{kind}: Done state not shown")
+                update("idle", kind, pane)
+                wait_for(lambda: not any(visible(state) for state in ("working", "waiting", "done")),
+                         f"{kind}: Idle not hidden")
             before = len(calls())
             subprocess.run(command, check=True, timeout=5)
             wait_for(lambda: len(calls()) > before, "Reload not rendered")
@@ -112,7 +115,7 @@ with Path(__file__).with_name("calls.jsonl").open("a") as f:
             bar.wait(timeout=5)
             observer.wait(timeout=5)
             assert observer.returncode == 0
-            print("PASS: working, waiting, done, idle, new panes, reload singleton, no idle polling, bar exit")
+            print("PASS: Codex and Pi working, waiting, done, idle, new panes, reload singleton, no idle polling, bar exit")
         finally:
             for process in (bar, observer):
                 if process.poll() is None:
