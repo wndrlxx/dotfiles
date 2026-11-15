@@ -6,6 +6,7 @@
                 "rules": [
                     {
                         "description": "Command + K → Karabiner-Elements",
+                        "enabled": false,
                         "manipulators": [
                             {
                                 "from": {
@@ -85,17 +86,17 @@
                         ]
                     },
                     {
-                        "description": "SUPER SHIFT + E → Open Ellie",
+                        "description": "SUPER SHIFT + S → Open Sunsama",
                         "manipulators": [
                             {
                                 "from": {
-                                    "key_code": "e",
+                                    "key_code": "s",
                                     "modifiers": {
                                         "mandatory": ["shift", "command"],
                                         "optional": ["any"]
                                     }
                                 },
-                                "to": [{ "shell_command": "open -a Ellie" }],
+                                "to": [{ "shell_command": "open -a 'Open Sunsama Self Hosted'" }],
                                 "type": "basic"
                             }
                         ]
