@@ -8,6 +8,7 @@ import sys
 import tempfile
 import threading
 import time
+import unittest
 
 
 def wait_for(predicate, message):
@@ -66,7 +67,7 @@ with Path(__file__).with_name("calls.jsonl").open("a") as f:
 ''')
         fakebar.chmod(0o700)
         bar = subprocess.Popen(["/bin/sleep", "120"])
-        script = Path(__file__).resolve().parents[1] / "plugins/codex_status.py"
+        script = Path(__file__).resolve().parents[2] / "plugins/codex_status.py"
         command = [sys.executable, "-B", str(script), "--watch", "--bar-pid", str(bar.pid),
                    "--socket", str(path), "--cache-dir", str(root / "cache"), "--sketchybar", str(fakebar)]
         observer = subprocess.Popen(command)
@@ -87,6 +88,7 @@ with Path(__file__).with_name("calls.jsonl").open("a") as f:
                     connection.sendall(b'{"event":"pane.agent_detected","data":{}}\n')
                 except OSError:
                     subscribers.remove(connection)
+                    connection.close()
 
         try:
             wait_for(lambda: len(calls()) > 0, "Initial idle render missing")
@@ -128,5 +130,10 @@ with Path(__file__).with_name("calls.jsonl").open("a") as f:
                 connection.close()
 
 
+class CodexStatusIntegrationTests(unittest.TestCase):
+    def test_status_observer_lifecycle(self):
+        check()
+
+
 if __name__ == "__main__":
-    check()
+    unittest.main()

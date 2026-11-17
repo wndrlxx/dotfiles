@@ -5,7 +5,7 @@ from pathlib import Path
 from unittest.mock import Mock, patch
 
 sys.dont_write_bytecode = True
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "plugins"))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "plugins"))
 from codex_status import Renderer, groups, list_agents, receive_events
 
 

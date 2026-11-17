@@ -1,6 +1,6 @@
 """macOS integration check using an isolated app, never the user's Ellie app.
 
-Usage: python3 -B check_ellie_watcher.py /path/to/compiled/ellie-watcher
+Builds the helper automatically; ELLIE_WATCHER_BINARY can select a prebuilt helper.
 """
 import json
 import os
@@ -10,6 +10,7 @@ import subprocess
 import sys
 import tempfile
 import time
+import unittest
 from pathlib import Path
 
 
@@ -125,5 +126,21 @@ with Path(__file__).with_name("calls.jsonl").open("a") as f:
                     process.wait(timeout=5)
 
 
+class EllieWatcherIntegrationTests(unittest.TestCase):
+    @unittest.skipUnless(sys.platform == "darwin", "Requires macOS app lifecycle APIs")
+    def test_app_lifecycle_and_timer(self):
+        binary = os.environ.get("ELLIE_WATCHER_BINARY")
+        if binary:
+            check(str(Path(binary).resolve()))
+            return
+        with tempfile.TemporaryDirectory(prefix="ellie-watcher-build-") as directory:
+            root = Path(directory)
+            binary = root / "ellie-watcher"
+            source = Path(__file__).resolve().parents[2] / "plugins/ellie_watcher.swift"
+            subprocess.run(["/usr/bin/swiftc", "-O", "-module-cache-path", str(root / "ellie-swift-modules"),
+                            str(source), "-o", str(binary)], check=True)
+            check(str(binary))
+
+
 if __name__ == "__main__":
-    check(str(Path(sys.argv[1]).resolve()))
+    unittest.main()
