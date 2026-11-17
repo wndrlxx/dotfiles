@@ -69,6 +69,14 @@ if.app-name-regex-substring = 'finder'
 run = 'layout floating'
 
 [[on-window-detected]]
+if.app-name-regex-substring = 'zoom'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-name-regex-substring = 'teams'
+run = 'layout floating'
+
+[[on-window-detected]]
 if.app-name-regex-substring = 'anki'
 run = 'layout tiling'
 
