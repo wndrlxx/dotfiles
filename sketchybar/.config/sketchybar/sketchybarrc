@@ -49,7 +49,7 @@ sketchybar --add item front_app left \
            --set front_app icon.drawing=off script="$PLUGIN_DIR/front_app.sh" \
            --subscribe front_app front_app_switched
 
-# With notch - Left: day and time; Right: active Ellie timer.
+# With notch - Left: day and time; Right: active task timer.
 
 sketchybar --add item clock.notch q \
            --set clock.notch drawing=off label.padding_left=7 label.padding_right=0 update_freq=6 script="$PLUGIN_DIR/clock.sh"
@@ -113,6 +113,24 @@ for detail in primary secondary status; do
                    label.padding_left=12 label.padding_right=12
 done
 
+# Use Open Sunsama when its key is configured; override with
+# SKETCHYBAR_TIMER_PROVIDER=ellie or sunsama in the SketchyBar environment.
+timer_provider="${SKETCHYBAR_TIMER_PROVIDER:-auto}"
+if [ "$timer_provider" = auto ]; then
+  if [ -n "${OPEN_SUNSAMA_API_KEY:-}" ] || /usr/bin/security find-generic-password -s sketchybar-open-sunsama >/dev/null 2>&1; then
+    timer_provider=sunsama
+  else
+    timer_provider=ellie
+  fi
+fi
+if [ "$timer_provider" = sunsama ]; then
+sketchybar --add item sunsama_timer left \
+           --set sunsama_timer drawing=off updates=on update_freq=0 \
+                 script="python3 -B \"$PLUGIN_DIR/sunsama_timer.py\"" \
+           --subscribe sunsama_timer system_woke
+python3 -B "$PLUGIN_DIR/sunsama_timer.py" --watch --bar-pid "$PPID" > /dev/null &
+else
+python3 -B "$PLUGIN_DIR/sunsama_timer.py" --stop
 # Render Ellie's active timer; this controller stays hidden.
 sketchybar --add item ellie_timer left \
            --set ellie_timer drawing=off updates=on update_freq=0 \
@@ -121,6 +139,7 @@ sketchybar --add item ellie_timer left \
 
 # Native observer enables ticking only while Ellie is open.
 /bin/bash "$PLUGIN_DIR/ellie_watcher.sh" "$PPID" > /dev/null &
+fi
 
 # One idle observer, reused on reload; no recurring status script or agent prompts.
 python3 -B "$PLUGIN_DIR/codex_status.py" --watch \

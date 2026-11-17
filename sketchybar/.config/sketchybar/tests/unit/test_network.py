@@ -6,7 +6,7 @@ import unittest
 from unittest.mock import patch
 
 SPEC = importlib.util.spec_from_file_location(
-    "network", Path(__file__).resolve().parents[1] / "plugins/network.py"
+    "network", Path(__file__).resolve().parents[2] / "plugins/network.py"
 )
 network = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(network)

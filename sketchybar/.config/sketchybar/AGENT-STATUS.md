@@ -35,8 +35,8 @@ python3 -B ~/.config/sketchybar/plugins/codex_status.py --status
 Tests from the sketchybar dotfiles directory:
 
 ```sh
-python3 -B -m unittest discover -s .config/sketchybar/tests
-python3 -B .config/sketchybar/tests/check_codex_status.py
+python3 -B -m unittest discover -s .config/sketchybar/tests/unit
+python3 -B .config/sketchybar/tests/integration/test_codex_status.py
 ```
 
 The integration check uses an isolated fake socket and bar; it never changes

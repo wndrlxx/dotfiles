@@ -1,4 +1,4 @@
-"""Run with: python3 -B -m unittest discover -s .config/sketchybar/tests -v"""
+"""Run with: python3 -B -m unittest discover -s .config/sketchybar/tests/unit -v"""
 
 import copy
 import json
@@ -11,7 +11,7 @@ from pathlib import Path
 from unittest.mock import Mock, patch
 
 sys.dont_write_bytecode = True
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "plugins"))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "plugins"))
 import ellie_timer
 from ellie_storage import FormatError, V8Reader, database_entries, live_files, log_records, snappy, table_entries
 from ellie_timer import cached_snapshot, display, snapshot, update_bar

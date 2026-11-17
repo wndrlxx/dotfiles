@@ -155,8 +155,8 @@ def fingerprint(directory):
             if p.suffix in (".log", ".ldb", ".sst") or p.name.startswith("MANIFEST-") or p.name == "CURRENT"]
 
 
-def cache_directory():
-    cache_dir = Path(tempfile.gettempdir()) / f"sketchybar-ellie-{os.getuid()}"
+def cache_directory(provider="ellie"):
+    cache_dir = Path(tempfile.gettempdir()) / f"sketchybar-{provider}-{os.getuid()}"
     cache_dir.mkdir(mode=0o700, exist_ok=True)
     info = cache_dir.lstat()
     if not stat.S_ISDIR(info.st_mode) or info.st_uid != os.getuid() or info.st_mode & 0o077:
@@ -231,10 +231,10 @@ def current_snapshot(directory):
     return saved.get("state", {})
 
 
-def update_bar(result):
+def update_bar(result, click_script="open -a Ellie"):
     if result["running"]:
         clock, label = result["label"].split(" ", 1)
-        icon, click = f"{result['icon']} {clock}", "open -a Ellie"
+        icon, click = f"{result['icon']} {clock}", click_script
         style = ["icon.color=0xfffbbf24", "icon.font=Hack Nerd Font:Bold:12.0",
                  "icon.background.drawing=on", "icon.background.color=0x2efbbf24",
                  "icon.background.height=20", "icon.background.corner_radius=6",

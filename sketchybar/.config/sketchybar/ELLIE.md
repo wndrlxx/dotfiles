@@ -1,5 +1,7 @@
 # Ellie timer
 
+For the API-backed Open Sunsama timer with the same appearance, see [SUNSAMA.md](SUNSAMA.md).
+
 The hidden `ellie_timer` controller displays the running task and elapsed time.
 Python refreshes Ellie's state every five seconds, while the native watcher
 advances the displayed time every second between refreshes.
@@ -50,11 +52,15 @@ python3 -B ~/.config/sketchybar/plugins/ellie_timer.py --status
 Run the storage and timer tests from the `sketchybar` dotfiles directory:
 
 ```sh
-python3 -B -m unittest discover -s .config/sketchybar/tests -v
+python3 -B -m unittest discover -s .config/sketchybar/tests/unit -v
 ```
 
 The macOS lifecycle integration check uses a separate test app and fake bar:
 
 ```sh
-python3 -B .config/sketchybar/tests/check_ellie_watcher.py "${TMPDIR:-/tmp}/sketchybar-ellie-$(id -u)/ellie-watcher"
+python3 -B .config/sketchybar/tests/integration/test_ellie_watcher.py
 ```
+
+The integration test builds the current helper automatically. Set
+`ELLIE_WATCHER_BINARY` to reuse a precompiled helper. See [tests/README.md](tests/README.md)
+for commands to run either suite or all tests.
