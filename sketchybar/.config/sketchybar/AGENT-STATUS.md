@@ -1,43 +1,48 @@
 # Codex and Pi agent indicators
 
-`codex_status.py` observes the default local Herdr session. It shows combined
-counts of Codex and Pi agents managed by Herdr, alongside the existing Codex
-quota bars:
+`codex_status.py` combines Codex and Pi status from the default local Herdr
+session and all sessions on the local Rex server. The counts appear alongside
+the Codex quota bars.
 
-| Indicator | Herdr state |
-| --- | --- |
-| Amber `◌ Working: N` (`#E0AF68`) | `working` |
-| Pink/red `? Input: N` (`#F7768E`) | `blocked` (approval or user input needed) |
-| Cyan `✓ Done: N` (`#7DCFFF`) | `done` |
-| Hidden | `idle`, `unknown`, or no matching agents |
+| Indicator | Herdr state | Rex state |
+| --- | --- | --- |
+| Amber `◌ Working: N` (`#E0AF68`) | `working` | `working` |
+| Pink/red `? Input: N` (`#F7768E`) | `blocked` | `blocked` |
+| Cyan `✓ Done: N` (`#7DCFFF`) | `done` | `done` |
+| Pink/red `! Error: N` (`#F7768E`) | — | `error` |
+| Hidden | `idle`, `unknown`, or no matching agents | `idle` or no matching records |
 
-Hover an indicator to see the corresponding agents' titles. Herdr owns the
-done/idle distinction and when completions are considered seen. Hovering does
-not focus an agent or mark it seen.
+Hover an indicator to see the agents' titles. Rex rows have a `Rex ·` prefix.
+Each terminal manager determines when a completion is considered seen. The
+popup reads the current status without changing focus or completion state.
 
-One persistent Python observer subscribes to Herdr's local Unix socket. It reads
-an initial `agent.list`, then refreshes only after relevant status, topology, or
-focus events. It sends no prompts, approvals, focus commands, or other agent
-mutations. There is no recurring SketchyBar update script. If disconnected, it
-hides the indicators and retries the socket every five seconds. Config reloads
-reuse the observer, and it exits when SketchyBar exits.
+The watcher reads an initial Herdr `agent.list` and subscribes to status,
+topology, and focus events on the local Unix socket. A Rex CLI subprocess
+reads program status records and follows status and topology events. Rex counts
+records reported as `codex` or `pi` via OSC 7501. A disconnect clears that
+source's rows and retries its connection after five seconds.
 
-The socket defaults to `~/.config/herdr/herdr.sock`, with `HERDR_SOCKET_PATH` and
-`HERDR_CONFIG_PATH` overrides. Other Herdr sessions, remote machines, and agents
-outside Herdr are not included. No API keys or new hooks are needed.
+The Herdr socket defaults to `~/.config/herdr/herdr.sock`, with
+`HERDR_SOCKET_PATH` and `HERDR_CONFIG_PATH` overrides. The watcher looks for
+`rex` on its PATH, then in the Rex and Rex Beta bundles under `/Applications`.
+Set `SKETCHYBAR_REX_BIN` to override the executable or set it to an empty
+string to disable Rex. The CLI connects with server autostart disabled.
 
-Inspect counts without changing the bar:
+Restart SketchyBar once when upgrading from the Herdr-only watcher. Subsequent
+config reloads reuse the watcher, and it exits with SketchyBar.
+
+Inspect the combined counts without changing the bar.
 
 ```sh
 python3 -B ~/.config/sketchybar/plugins/codex_status.py --status
 ```
 
-Tests from the sketchybar dotfiles directory:
+Run the tests from the sketchybar dotfiles directory.
 
 ```sh
 python3 -B -m unittest discover -s .config/sketchybar/tests/unit
 python3 -B .config/sketchybar/tests/integration/test_codex_status.py
 ```
 
-The integration check uses an isolated fake socket and bar; it never changes
-real Herdr agents.
+The integration tests use a fake Herdr socket, Rex executable, and bar. They
+cover both sources' status transitions and independent disconnects.
