@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Show Codex and Pi agents using Herdr's read-only, local status event stream."""
+"""Show Codex and Pi agents using local Herdr and Rex status events."""
 import argparse
 import fcntl
 import json
@@ -7,15 +7,19 @@ import os
 from pathlib import Path
 import re
 import select
+import shutil
 import socket
 import stat
 import subprocess
 import time
+import unicodedata
 
 SUPPORTED_AGENTS = {"codex", "pi"}
 STATES = {"working": ("Working", "◌", "0xffe0af68"),
           "waiting": ("Input", "?", "0xfff7768e"),
-          "done": ("Done", "✓", "0xff7dcfff")}
+          "done": ("Done", "✓", "0xff7dcfff"),
+          "error": ("Error", "!", "0xfff7768e")}
+RENDER_STATES = {"working": "working", "blocked": "waiting", "done": "done", "error": "error"}
 TOPOLOGY = ["pane.created", "pane.closed", "pane.exited", "pane.moved",
             "pane.agent_detected", "pane.focused", "tab.focused", "workspace.focused", "workspace.closed"]
 
@@ -67,16 +71,67 @@ def receive_events(connection, buffer):
     return buffer, changed
 
 
+def rex_command(executable):
+    if executable is None:
+        executable = shutil.which("rex")
+        if not executable:
+            for app in ("Rex.app", "Rex Beta.app"):
+                bundled = f"/Applications/{app}/Contents/Helpers/Rex Server.rex/Contents/MacOS/rex"
+                if os.access(bundled, os.X_OK):
+                    executable = bundled
+                    break
+    if not executable:
+        return None
+    script = Path(__file__).resolve().with_name("rex_agent_status.lua")
+    return [executable, "--autostart=false", "--timeout", "3s", "do", str(script),
+            "--all", "--fail-fast"]
+
+
+def stop_rex(process):
+    process.stdout.close()
+    process.terminate()
+    try:
+        process.wait(timeout=1)
+    except subprocess.TimeoutExpired:
+        process.kill()
+        process.wait()
+
+
+def parse_rex_snapshot(data):
+    snapshot = json.loads(data)
+    if not isinstance(snapshot, dict) or any(
+        not isinstance(agent, dict) or agent.get("pane_id") != pane
+        for pane, agent in snapshot.items()
+    ):
+        raise ValueError("Invalid Rex snapshot")
+    return list(snapshot.values())
+
+
+def receive_rex(fd, buffer, agents):
+    chunk = os.read(fd, 65536)
+    if not chunk:
+        raise ConnectionError("Rex disconnected")
+    buffer += chunk
+    if len(buffer) > 2 * 1024 * 1024:
+        raise ValueError("Oversized Rex snapshot")
+    while b"\n" in buffer:
+        line, buffer = buffer.split(b"\n", 1)
+        agents = parse_rex_snapshot(line)
+    return buffer, agents
+
+
 def groups(agents):
     result = {state: [] for state in STATES}
     for agent in agents:
         if agent.get("agent") not in SUPPORTED_AGENTS:
             continue
-        state = {"working": "working", "blocked": "waiting", "done": "done"}.get(agent.get("agent_status"))
+        state = RENDER_STATES.get(agent.get("agent_status"))
         if state:
             title = (agent.get("name") or agent.get("terminal_title_stripped")
                      or agent.get("terminal_title") or agent["pane_id"])
             title = " ".join(str(title).split())
+            if agent.get("source") == "Rex":
+                title = "Rex · " + "".join(char for char in title if unicodedata.category(char) not in {"Cc", "Cf"})
             result[state].append((agent["pane_id"], title[:80]))
     for rows in result.values():
         rows.sort()
@@ -122,7 +177,7 @@ def private_directory(path):
     return path
 
 
-def watcher(path, bar_pid, directory, executable):
+def watcher(path, bar_pid, directory, executable, rex_executable):
     directory = private_directory(directory)
     lock = os.open(directory / "watcher.lock", os.O_CREAT | os.O_RDWR | os.O_NOFOLLOW, 0o600)
     control_path = str(directory / "refresh.sock")
@@ -148,6 +203,7 @@ def watcher(path, bar_pid, directory, executable):
     control = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
     queue = select.kqueue()
     connection = None
+    rex = None
     renderer = Renderer(executable)
     try:
         Path(control_path).unlink(missing_ok=True)
@@ -159,13 +215,15 @@ def watcher(path, bar_pid, directory, executable):
                           fflags=select.KQ_NOTE_EXIT)], 0, 0)
         os.kill(bar_pid, 0)
         buffer, panes = b"", set()
+        herdr_agents, rex_agents, rex_buffer = [], [], b""
+        rex_retry_at = float("inf") if rex_executable == "" else 0
         refresh, force, retry_at = True, True, 0
         while True:
             if refresh:
                 refresh = False
                 try:
-                    agents = list_agents(path)
-                    current_panes = {agent["pane_id"] for agent in agents}
+                    herdr_agents = list_agents(path)
+                    current_panes = {agent["pane_id"] for agent in herdr_agents}
                     if connection is None or current_panes != panes:
                         if connection:
                             connection.close()
@@ -175,20 +233,33 @@ def watcher(path, bar_pid, directory, executable):
                                                       flags=select.KQ_EV_ADD)], 0, 0)
                         buffer, panes = b"", current_panes
                         # Snapshot again after subscribing to cover changes during setup.
-                        agents = list_agents(path)
-                        if {agent["pane_id"] for agent in agents} != panes:
+                        herdr_agents = list_agents(path)
+                        if {agent["pane_id"] for agent in herdr_agents} != panes:
                             refresh = True
-                    renderer.render(agents, force=force)
-                    force = False
-                except (OSError, ValueError, KeyError, subprocess.SubprocessError):
+                except (OSError, ValueError, KeyError):
                     if connection:
                         connection.close()
                     connection, buffer = None, b""
-                    renderer.render([], force=force)
-                    force, retry_at = False, time.monotonic() + 5
+                    herdr_agents, retry_at = [], time.monotonic() + 5
+            if rex is None and time.monotonic() >= rex_retry_at:
+                rex_retry_at = time.monotonic() + 5
+                command = rex_command(rex_executable)
+                if command:
+                    try:
+                        rex = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+                        queue.control([select.kevent(rex.stdout.fileno(), filter=select.KQ_FILTER_READ,
+                                                      flags=select.KQ_EV_ADD)], 0, 0)
+                    except OSError:
+                        if rex:
+                            stop_rex(rex)
+                        rex = None
+            renderer.render(herdr_agents + rex_agents, force=force)
+            force = False
             if refresh:
                 continue
-            timeout = None if connection else max(0, retry_at - time.monotonic())
+            deadline = min(float("inf") if connection else retry_at,
+                           float("inf") if rex else rex_retry_at)
+            timeout = None if deadline == float("inf") else max(0, deadline - time.monotonic())
             events = queue.control(None, 32, timeout)
             for event in events:
                 if event.filter == select.KQ_FILTER_PROC:
@@ -205,11 +276,20 @@ def watcher(path, bar_pid, directory, executable):
                     except (OSError, ValueError):
                         connection.close()
                         connection, buffer = None, b""
-                        renderer.render([])
+                        herdr_agents = []
                         retry_at = time.monotonic() + 5
+                elif rex and event.ident == rex.stdout.fileno():
+                    try:
+                        rex_buffer, rex_agents = receive_rex(event.ident, rex_buffer, rex_agents)
+                    except (OSError, ValueError):
+                        stop_rex(rex)
+                        rex, rex_buffer, rex_agents = None, b"", []
+                        rex_retry_at = time.monotonic() + 5
             if connection is None and time.monotonic() >= retry_at:
                 refresh = True
     finally:
+        if rex:
+            stop_rex(rex)
         if connection:
             connection.close()
         queue.close()
@@ -227,6 +307,8 @@ def main():
     parser.add_argument("--bar-pid", type=int)
     parser.add_argument("--cache-dir", default=f"/tmp/sketchybar-codex-status-{os.getuid()}")
     parser.add_argument("--sketchybar", default="sketchybar")
+    parser.add_argument("--rex", default=os.environ.get("SKETCHYBAR_REX_BIN"),
+                        help="Rex CLI path (empty to disable Rex)")
     args = parser.parse_args()
     if args.popup:
         name = os.environ.get("NAME", "")
@@ -235,9 +317,21 @@ def main():
         show = os.environ.get("SENDER") == "mouse.entered"
         subprocess.run([args.sketchybar, "--set", name, f"popup.drawing={'on' if show else 'off'}"], check=True)
     elif args.status:
-        print(json.dumps({state: len(rows) for state, rows in groups(list_agents(args.socket)).items()}))
+        try:
+            agents = list_agents(args.socket)
+        except (OSError, ValueError, KeyError):
+            agents = []
+        command = rex_command(args.rex)
+        if command:
+            try:
+                snapshot = subprocess.check_output(command + ["snapshot=true"], timeout=5,
+                                                   stderr=subprocess.DEVNULL)
+                agents += parse_rex_snapshot(snapshot)
+            except (OSError, ValueError, subprocess.SubprocessError):
+                pass
+        print(json.dumps({state: len(rows) for state, rows in groups(agents).items()}))
     elif args.watch and args.bar_pid and args.bar_pid > 0:
-        watcher(args.socket, args.bar_pid, args.cache_dir, args.sketchybar)
+        watcher(args.socket, args.bar_pid, args.cache_dir, args.sketchybar, args.rex)
     else:
         parser.error("Use --watch --bar-pid PID, --popup, or --status")
 

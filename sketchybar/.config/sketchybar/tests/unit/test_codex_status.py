@@ -6,7 +6,7 @@ from unittest.mock import Mock, patch
 
 sys.dont_write_bytecode = True
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "plugins"))
-from codex_status import Renderer, groups, list_agents, receive_events
+from codex_status import Renderer, groups, list_agents, receive_events, receive_rex
 
 
 def agent(pane, state, kind="codex", title="Task"):
@@ -44,7 +44,21 @@ class CodexStatusTests(unittest.TestCase):
                 agent("p9", "done", "pi"), agent("p10", "idle", "pi"), agent("p11", "unknown", "pi")]
         self.assertEqual(groups(data), {"working": [("p1", "Task"), ("p7", "Task")],
                                        "waiting": [("p2", "Task"), ("p8", "Task")],
-                                       "done": [("p3", "Task"), ("p9", "Task")]})
+                                       "done": [("p3", "Task"), ("p9", "Task")],
+                                       "error": []})
+
+    def test_rex_snapshots_replace_rows_after_complete_frames(self):
+        row = dict(agent("rex:p1", "error", "pi"), source="Rex")
+        frame = json.dumps({"rex:p1": row}).encode()
+        with patch("codex_status.os.read", side_effect=[frame[:10], frame[10:] + b"\n", b"{}\n", b""]):
+            buffer, rows = receive_rex(3, b"", [])
+            self.assertEqual(rows, [])
+            buffer, rows = receive_rex(3, buffer, rows)
+            self.assertEqual(groups(rows)["error"], [("rex:p1", "Rex · Task")])
+            buffer, rows = receive_rex(3, buffer, rows)
+            self.assertEqual((buffer, rows), (b"", []))
+            with self.assertRaises(ConnectionError):
+                receive_rex(3, buffer, rows)
 
     def test_snapshot_keeps_pi_panes_for_status_subscriptions(self):
         data = [agent("p1", "working"), agent("p2", "blocked", "pi"),
@@ -67,8 +81,8 @@ class CodexStatusTests(unittest.TestCase):
             self.assertIn("popup.codex_state.working", command)
             renderer.render([agent("p1", "idle"), agent("p2", "idle")])
             command = run.call_args.args[0]
-            self.assertEqual(command.count("drawing=off"), 3)
-            self.assertEqual(command.count("popup.drawing=off"), 3)
+            self.assertEqual(command.count("drawing=off"), 4)
+            self.assertEqual(command.count("popup.drawing=off"), 4)
 
     def test_unchanged_status_does_not_update_bar_but_reload_does(self):
         with patch("codex_status.subprocess.run") as run:

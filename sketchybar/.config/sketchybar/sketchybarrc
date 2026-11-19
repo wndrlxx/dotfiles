@@ -95,8 +95,8 @@ sketchybar --add item network right \
                  script="python3 -B \"$PLUGIN_DIR/network.py\"" \
            --subscribe network system_woke
 
-# Codex and Pi agents managed by Herdr: hide idle/unknown, show combined status counts on changes.
-for state in working waiting done; do
+# Codex and Pi agent status from Herdr and Rex.
+for state in working waiting done error; do
   sketchybar --add item "codex_state.$state" right \
              --set "codex_state.$state" drawing=off padding_right=6 \
                    label.padding_left=4 label.padding_right=0 \
