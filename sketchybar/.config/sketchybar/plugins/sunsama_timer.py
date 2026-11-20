@@ -156,7 +156,10 @@ class TimerWatcher:
             result = subprocess.run(["sketchybar", "--query", "sunsama_timer"],
                                     check=True, capture_output=True, text=True, timeout=2)
             script = json.loads(result.stdout)["scripting"]["script"]
-            return str(Path(__file__).resolve()) in script
+            if not isinstance(script, str):
+                return False
+            controller = Path(__file__).resolve()
+            return any(Path(argument).resolve() == controller for argument in shlex.split(script)[1:])
         except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError):
             return False
 
