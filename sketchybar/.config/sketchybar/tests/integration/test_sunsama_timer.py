@@ -1,6 +1,7 @@
 """Check the Python watcher with a local API and fake bar; no real credentials."""
 import json
 import os
+import shlex
 import subprocess
 import sys
 import tempfile
@@ -51,6 +52,9 @@ def check():
     plugin_dir = Path(__file__).resolve().parents[2] / "plugins"
     with tempfile.TemporaryDirectory(prefix="sunsama-python-check-") as directory:
         root = Path(directory)
+        linked_plugins = root / "linked plugins"
+        linked_plugins.symlink_to(plugin_dir, target_is_directory=True)
+        controller_script = f"python3 -B {shlex.quote(str(linked_plugins / 'sunsama_timer.py'))}"
         fakebar = root / "sketchybar"
         fakebar.write_text(f"#!{sys.executable}\n" + '''import json, sys, time
 from pathlib import Path
@@ -61,7 +65,7 @@ if "--query" in sys.argv:
         if Path(__file__).with_name("controller-removed").exists():
             print("Controller removed")
         else:
-            print(json.dumps({"scripting":{"script":''' + repr(f"python3 -B {plugin_dir / 'sunsama_timer.py'}") + '''}}))
+            print(json.dumps({"scripting":{"script":''' + repr(controller_script) + '''}}))
     else:
         raise AssertionError("Unexpected display query")
 ''')
