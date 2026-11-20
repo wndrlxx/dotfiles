@@ -117,6 +117,10 @@ if.app-name-regex-substring = 'ghostty'
 run = ['layout tiling', 'move-node-to-workspace 4']
 
 [[on-window-detected]]
+if.app-name-regex-substring = 'rex'
+run = ['layout tiling', 'move-node-to-workspace 4']
+
+[[on-window-detected]]
 if.app-name-regex-substring = 'numbers'
 run = ['layout tiling', 'move-node-to-workspace 5']
 
