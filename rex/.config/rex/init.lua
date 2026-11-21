@@ -11,6 +11,12 @@ rex.bind("ctrl+alt+j", "pane.focus.down")
 rex.bind("ctrl+alt+k", "pane.focus.up")
 rex.bind("ctrl+alt+l", "pane.focus.right")
 
+local resize_step = 5
+rex.bind("ctrl+alt+shift+h", "pane.resize", { direction = "left", amount = resize_step })
+rex.bind("ctrl+alt+shift+j", "pane.resize", { direction = "down", amount = resize_step })
+rex.bind("ctrl+alt+shift+k", "pane.resize", { direction = "up", amount = resize_step })
+rex.bind("ctrl+alt+shift+l", "pane.resize", { direction = "right", amount = resize_step })
+
 rex.unbind("alt+shift+cmd+left", "pane.move.left")
 rex.unbind("alt+shift+cmd+down", "pane.move.down")
 rex.unbind("alt+shift+cmd+up", "pane.move.up")
