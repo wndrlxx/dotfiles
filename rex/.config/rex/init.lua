@@ -26,8 +26,8 @@ rex.bind("ctrl+alt+cmd+j", "pane.move.down")
 rex.bind("ctrl+alt+cmd+k", "pane.move.up")
 rex.bind("ctrl+alt+cmd+l", "pane.move.right")
 
-rex.bind("ctrl+shift+k", "client.tab.previous")
-rex.bind("ctrl+shift+j", "client.tab.next")
+rex.bind("cmd+shift+k", "client.tab.previous")
+rex.bind("cmd+shift+j", "client.tab.next")
 
 rex.action({
 	name = "lazygit_popup",
