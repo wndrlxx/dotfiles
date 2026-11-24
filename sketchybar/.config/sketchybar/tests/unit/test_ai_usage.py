@@ -319,6 +319,45 @@ class AgyUsageHookTests(unittest.TestCase):
             self.assertEqual(cached["plan_tier"], "Pro")
             self.assertAlmostEqual(cached["quota"]["gemini-weekly"]["remaining_fraction"], 0.9378)
 
+    def test_hook_does_not_starve_periodic_trigger_on_frequent_unchanged_updates(self):
+        payload = json.dumps({
+            "plan_tier": "Pro",
+            "quota": {
+                "gemini-weekly": {
+                    "remaining_fraction": 0.9378,
+                    "reset_time": "2026-07-06T07:50:32Z",
+                }
+            },
+        })
+        with tempfile.TemporaryDirectory() as tmp:
+            cache = Path(tmp) / "cache"
+            with patch.object(agy_hook.subprocess, "run") as run_mock:
+                results = [
+                    agy_hook.process_payload(payload, cache_dir=cache, executable="/fake/sketchybar", now=ts)
+                    for ts in (1000.0, 1020.0, 1040.0, 1060.0)
+                ]
+            self.assertEqual(results, [True, False, False, True])
+            self.assertEqual(run_mock.call_count, 2)
+
+    def test_write_json_atomic_handles_concurrent_writes(self):
+        import concurrent.futures
+
+        with tempfile.TemporaryDirectory() as tmp:
+            target = Path(tmp) / "gemini.json"
+
+            def writer(idx):
+                for step in range(10):
+                    agy_hook.write_json_atomic(target, {"writer": idx, "step": step})
+
+            with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:
+                futures = [pool.submit(writer, i) for i in range(4)]
+                for future in futures:
+                    future.result()
+
+            data = json.loads(target.read_text(encoding="utf-8"))
+            self.assertIn("writer", data)
+            self.assertEqual(list(Path(tmp).glob("*.tmp")), [])
+
     def test_hook_ignores_invalid_or_quota_free_payloads(self):
         with tempfile.TemporaryDirectory() as tmp:
             cache = Path(tmp) / "cache"

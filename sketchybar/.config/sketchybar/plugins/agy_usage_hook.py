@@ -26,11 +26,15 @@ def cache_directory(base=None):
 
 
 def write_json_atomic(path, payload):
-    temporary = path.with_suffix(path.suffix + ".tmp")
-    fd = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_TRUNC | os.O_NOFOLLOW, 0o600)
-    with os.fdopen(fd, "w", encoding="utf-8") as handle:
-        json.dump(payload, handle)
-    temporary.replace(path)
+    path = Path(path)
+    fd, tmp_name = tempfile.mkstemp(prefix=f".{path.name}.", suffix=".tmp", dir=path.parent)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as handle:
+            json.dump(payload, handle)
+        os.replace(tmp_name, path)
+    except BaseException:
+        Path(tmp_name).unlink(missing_ok=True)
+        raise
 
 
 def read_json_safe(path):
@@ -92,12 +96,18 @@ def process_payload(raw_text, cache_dir=None, executable="sketchybar", now=None)
     previous = read_json_safe(cache_path)
 
     changed = snapshot_signature(previous) != snapshot_signature(snapshot)
-    prev_captured = previous.get("captured_at") if isinstance(previous, dict) else None
-    stale = not isinstance(prev_captured, (int, float)) or (now - prev_captured) >= MIN_TRIGGER_INTERVAL
+    prev_triggered = (
+        previous.get("triggered_at", previous.get("captured_at"))
+        if isinstance(previous, dict)
+        else None
+    )
+    stale = not isinstance(prev_triggered, (int, float)) or (now - prev_triggered) >= MIN_TRIGGER_INTERVAL
+    should_trigger = changed or stale
+    snapshot["triggered_at"] = now if should_trigger else prev_triggered
 
     write_json_atomic(cache_path, snapshot)
 
-    if (changed or stale) and (executable != "sketchybar" or shutil.which("sketchybar")):
+    if should_trigger and (executable != "sketchybar" or shutil.which("sketchybar")):
         try:
             subprocess.run(
                 [executable, "--trigger", TRIGGER_EVENT],
