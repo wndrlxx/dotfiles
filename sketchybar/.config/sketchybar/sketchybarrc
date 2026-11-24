@@ -82,7 +82,7 @@ sketchybar --add item ai_usage right \
                  popup.align=right popup.height=18 popup.background.color=0xee20242b \
                  popup.background.corner_radius=6 popup.background.border_width=1 \
                  popup.background.border_color=0xff454b55 \
-           --subscribe ai_usage system_woke gemini_usage_updated mouse.entered mouse.exited mouse.exited.global
+           --subscribe ai_usage system_woke gemini_usage_updated mouse.entered mouse.exited mouse.exited.global mouse.clicked
 
 # Conditionally show CPU usage between network throughput and Codex usage bars.
 sketchybar --add item cpu right \
