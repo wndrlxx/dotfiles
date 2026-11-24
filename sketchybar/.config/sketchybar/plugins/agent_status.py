@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Show Codex and Pi agents using local Herdr and Rex status events."""
+"""Show Codex, Pi, and Antigravity agents using local Herdr and Rex status events."""
 import argparse
 import fcntl
 import json
@@ -14,7 +14,7 @@ import subprocess
 import time
 import unicodedata
 
-SUPPORTED_AGENTS = {"codex", "pi"}
+SUPPORTED_AGENTS = {"codex", "pi", "antigravity"}
 STATES = {"working": ("Working", "◌", "0xffe0af68"),
           "waiting": ("Input", "?", "0xfff7768e"),
           "done": ("Done", "✓", "0xff7dcfff"),
@@ -150,7 +150,7 @@ class Renderer:
         command = [self.executable]
         nearest_usage = next((state for state, rows in grouped.items() if rows), None)
         for state, (label, icon, color) in STATES.items():
-            name = f"codex_state.{state}"
+            name = f"agent_state.{state}"
             rows = grouped[state]
             command += ["--set", name, f"drawing={'on' if rows else 'off'}",
                         f"padding_right={10 if state == nearest_usage else 6}",
@@ -173,7 +173,7 @@ def private_directory(path):
     path.mkdir(mode=0o700, exist_ok=True)
     info = path.lstat()
     if not stat.S_ISDIR(info.st_mode) or info.st_uid != os.getuid() or info.st_mode & 0o077:
-        raise ValueError("Unsafe Codex status directory")
+        raise ValueError("Unsafe agent status directory")
     return path
 
 
@@ -198,7 +198,7 @@ def watcher(path, bar_pid, directory, executable, rex_executable):
                 pass
             if time.monotonic() > deadline:
                 os.close(lock)
-                raise RuntimeError("Previous Codex status watcher has not exited")
+                raise RuntimeError("Previous agent status watcher has not exited")
             time.sleep(0.05)  # Startup handoff only.
     control = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
     queue = select.kqueue()
@@ -305,14 +305,14 @@ def main():
     parser.add_argument("--status", action="store_true")
     parser.add_argument("--socket", default=default_socket())
     parser.add_argument("--bar-pid", type=int)
-    parser.add_argument("--cache-dir", default=f"/tmp/sketchybar-codex-status-{os.getuid()}")
+    parser.add_argument("--cache-dir", default=f"/tmp/sketchybar-agent-status-{os.getuid()}")
     parser.add_argument("--sketchybar", default="sketchybar")
     parser.add_argument("--rex", default=os.environ.get("SKETCHYBAR_REX_BIN"),
                         help="Rex CLI path (empty to disable Rex)")
     args = parser.parse_args()
     if args.popup:
         name = os.environ.get("NAME", "")
-        if name not in {f"codex_state.{state}" for state in STATES}:
+        if name not in {f"agent_state.{state}" for state in STATES}:
             return
         show = os.environ.get("SENDER") == "mouse.entered"
         subprocess.run([args.sketchybar, "--set", name, f"popup.drawing={'on' if show else 'off'}"], check=True)
