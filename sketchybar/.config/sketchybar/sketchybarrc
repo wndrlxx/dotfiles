@@ -96,16 +96,16 @@ sketchybar --add item network right \
                  script="python3 -B \"$PLUGIN_DIR/network.py\"" \
            --subscribe network system_woke
 
-# Codex and Pi agent status from Herdr and Rex.
+# Codex, Pi, and Antigravity agent status from Herdr and Rex.
 for state in working waiting done error; do
-  sketchybar --add item "codex_state.$state" right \
-             --set "codex_state.$state" drawing=off padding_right=6 \
+  sketchybar --add item "agent_state.$state" right \
+             --set "agent_state.$state" drawing=off padding_right=6 \
                    label.padding_left=4 label.padding_right=0 \
-                   script="python3 -B \"$PLUGIN_DIR/codex_status.py\" --popup" \
+                   script="python3 -B \"$PLUGIN_DIR/agent_status.py\" --popup" \
                    popup.align=right popup.height=22 popup.background.color=0xee20242b \
                    popup.background.corner_radius=6 popup.background.border_width=1 \
                    popup.background.border_color=0xff454b55 \
-             --subscribe "codex_state.$state" mouse.entered mouse.exited mouse.exited.global
+             --subscribe "agent_state.$state" mouse.entered mouse.exited mouse.exited.global
 done
 
 sketchybar --add item ai_usage.row.0 popup.ai_usage \
@@ -141,7 +141,7 @@ sketchybar --add item ellie_timer left \
 fi
 
 # One idle observer, reused on reload; no recurring status script or agent prompts.
-python3 -B "$PLUGIN_DIR/codex_status.py" --watch \
+python3 -B "$PLUGIN_DIR/agent_status.py" --watch \
   --bar-pid "$PPID" > /dev/null &
 
 ##### Force all scripts to run the first time (never do this in a script) #####

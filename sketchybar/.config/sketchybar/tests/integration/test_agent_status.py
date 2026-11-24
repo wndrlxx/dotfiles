@@ -24,7 +24,7 @@ def wait_for(predicate, message):
 
 
 def check(with_rex=False):
-    with tempfile.TemporaryDirectory(prefix="codex-status-check-", dir="/tmp") as directory:
+    with tempfile.TemporaryDirectory(prefix="agent-status-check-", dir="/tmp") as directory:
         root = Path(directory)
         path = root / "herdr.sock"
         listener = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
@@ -97,7 +97,7 @@ while path.exists():
 
         update_rex()
         bar = subprocess.Popen(["/bin/sleep", "120"])
-        script = Path(__file__).resolve().parents[2] / "plugins/codex_status.py"
+        script = Path(__file__).resolve().parents[2] / "plugins/agent_status.py"
         command = [sys.executable, "-B", str(script), "--watch", "--bar-pid", str(bar.pid),
                    "--socket", str(path), "--cache-dir", str(root / "cache"), "--sketchybar", str(fakebar),
                    "--rex", str(fakerex) if with_rex else ""]
@@ -108,7 +108,7 @@ while path.exists():
 
         def visible(state):
             last = calls()[-1]
-            index = last.index(f"codex_state.{state}")
+            index = last.index(f"agent_state.{state}")
             return last[index + 1] == "drawing=on"
 
         def update(state, kind, pane):
@@ -142,8 +142,8 @@ while path.exists():
                 wait_for(lambda: "label=Working: 2" in calls()[-1], "Combined Working count missing")
                 assert "label=Isolated agent" in calls()[-1]
                 assert "label=Rex · Isolated Rex agent" in calls()[-1]
-                for state, label in (("blocked", "Input"), ("done", "Done"), ("error", "Error")):
-                    update_rex(state, "pi")
+                for state, kind, label in (("blocked", "pi", "Input"), ("done", "antigravity", "Done"), ("error", "pi", "Error")):
+                    update_rex(state, kind)
                     wait_for(lambda: f"label={label}: 1" in calls()[-1], f"Rex {label} missing")
                     assert "label=Working: 1" in calls()[-1]
                 update_rex("idle")
@@ -192,7 +192,7 @@ while path.exists():
                 connection.close()
 
 
-class CodexStatusIntegrationTests(unittest.TestCase):
+class AgentStatusIntegrationTests(unittest.TestCase):
     def test_status_observer_lifecycle(self):
         check()
 

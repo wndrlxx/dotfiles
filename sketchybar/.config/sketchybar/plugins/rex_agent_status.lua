@@ -1,7 +1,7 @@
 -- Publish read-only snapshots to the SketchyBar agent status watcher.
 local terminal = "com.superlogical.terminal"
 local sessions = {}
-local apps = { codex = "Codex", pi = "Pi" }
+local apps = { codex = "Codex", pi = "Pi", antigravity = "Antigravity" }
 local visible = { working = true, blocked = true, done = true, error = true }
 
 local function read_block(session_id, block_id, label)

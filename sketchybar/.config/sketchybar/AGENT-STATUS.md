@@ -1,8 +1,8 @@
-# Codex and Pi agent indicators
+# Codex, Pi, and Antigravity agent indicators
 
-`codex_status.py` combines Codex and Pi status from the default local Herdr
-session and all sessions on the local Rex server. The counts appear alongside
-the Codex quota bars.
+`agent_status.py` combines Codex, Pi, and Antigravity (`agy`) status from the
+default local Herdr session and all sessions on the local Rex server. The
+counts appear alongside the AI usage bars.
 
 | Indicator | Herdr state | Rex state |
 | --- | --- | --- |
@@ -19,8 +19,8 @@ popup reads the current status without changing focus or completion state.
 The watcher reads an initial Herdr `agent.list` and subscribes to status,
 topology, and focus events on the local Unix socket. A Rex CLI subprocess
 reads program status records and follows status and topology events. Rex counts
-records reported as `codex` or `pi` via OSC 7501. A disconnect clears that
-source's rows and retries its connection after five seconds.
+records reported as `codex`, `pi`, or `antigravity` via OSC 7501. A disconnect
+clears that source's rows and retries its connection after five seconds.
 
 The Herdr socket defaults to `~/.config/herdr/herdr.sock`, with
 `HERDR_SOCKET_PATH` and `HERDR_CONFIG_PATH` overrides. The watcher looks for
@@ -34,14 +34,14 @@ config reloads reuse the watcher, and it exits with SketchyBar.
 Inspect the combined counts without changing the bar.
 
 ```sh
-python3 -B ~/.config/sketchybar/plugins/codex_status.py --status
+python3 -B ~/.config/sketchybar/plugins/agent_status.py --status
 ```
 
 Run the tests from the sketchybar dotfiles directory.
 
 ```sh
 python3 -B -m unittest discover -s .config/sketchybar/tests/unit
-python3 -B .config/sketchybar/tests/integration/test_codex_status.py
+python3 -B .config/sketchybar/tests/integration/test_agent_status.py
 ```
 
 The integration tests use a fake Herdr socket, Rex executable, and bar. They
