@@ -30,6 +30,7 @@ sketchybar --default "${default[@]}"
 
 sketchybar --add event aerospace_workspace_change
 sketchybar --add event ellie_app_changed
+sketchybar --add event gemini_usage_updated
 
 # Active workspace indicator
 sketchybar --add item aerospace_workspace left \
@@ -72,16 +73,16 @@ sketchybar --add item clock_layout left \
                  script="/bin/bash \"$PLUGIN_DIR/clock_layout.sh\"" \
            --subscribe clock_layout display_change system_woke
 
-# Codex remaining quota: five-hour bar above, weekly bar below.
-sketchybar --add item codex_usage right \
-           --set codex_usage width=48 padding_left=8 padding_right=2 \
+# Unified AI remaining quota: Codex (left) and Gemini via agy (right).
+sketchybar --add item ai_usage right \
+           --set ai_usage width=88 padding_left=8 padding_right=2 \
                  background.drawing=on \
                  icon.drawing=off label.drawing=off update_freq=300 \
-                 script="python3 \"$PLUGIN_DIR/codex_usage.py\"" \
-                 popup.align=right popup.height=16 popup.background.color=0xee20242b \
+                 script="python3 -B \"$PLUGIN_DIR/ai_usage.py\"" \
+                 popup.align=right popup.height=18 popup.background.color=0xee20242b \
                  popup.background.corner_radius=6 popup.background.border_width=1 \
                  popup.background.border_color=0xff454b55 \
-           --subscribe codex_usage system_woke mouse.entered mouse.exited mouse.exited.global
+           --subscribe ai_usage system_woke gemini_usage_updated mouse.entered mouse.exited mouse.exited.global
 
 # Conditionally show CPU usage between network throughput and Codex usage bars.
 sketchybar --add item cpu right \
@@ -107,11 +108,9 @@ for state in working waiting done error; do
              --subscribe "codex_state.$state" mouse.entered mouse.exited mouse.exited.global
 done
 
-for detail in primary secondary status; do
-  sketchybar --add item "codex_usage.$detail" popup.codex_usage \
-             --set "codex_usage.$detail" icon.drawing=off label="Loading…" \
-                   label.padding_left=12 label.padding_right=12
-done
+sketchybar --add item ai_usage.row.0 popup.ai_usage \
+           --set ai_usage.row.0 icon.drawing=off label="Loading…" \
+                 label.padding_left=12 label.padding_right=12
 
 # Use Open Sunsama when its key is configured; override with
 # SKETCHYBAR_TIMER_PROVIDER=ellie or sunsama in the SketchyBar environment.
