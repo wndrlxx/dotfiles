@@ -14,7 +14,6 @@ brew install --cask shottr
 brew install --cask superwhisper
 
 brew tap FelixKratz/formulae
-brew install borders
 brew install sketchybar
 
 brew install antidote
